@@ -2,11 +2,9 @@ import { Typography, TextField, Button } from '@mui/material';
 import { useState } from 'react';
 import './Sidebar.css';
 
-type SidebarProps = {
-  onCreateNode: (name: string) => void;
-};
+type SidebarProps = {};
 
-const Sidebar = ({ onCreateNode }: SidebarProps) => {
+const Sidebar = () => {
   const [name, setName] = useState<string>('');
 
   return (
@@ -15,7 +13,6 @@ const Sidebar = ({ onCreateNode }: SidebarProps) => {
         style={{ display: 'flex', flexDirection: 'column' }}
         onSubmit={(e) => {
           e.preventDefault();
-          onCreateNode(name);
           setName('');
         }}
       >
