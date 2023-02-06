@@ -1,0 +1,19 @@
+.rightsidebar-container {
+  border-left: 1px black solid;
+  flex: 1;
+  padding: 3px;
+}
+
+.node-information {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.connection {
+  padding: 1px;
+}
+.connection:hover {
+  text-decoration: line-through;
+}

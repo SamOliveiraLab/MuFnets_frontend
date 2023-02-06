@@ -5,11 +5,12 @@ header {
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  background-color: black;
 }
 
 .nav-link {
   text-decoration: none;
-  color: black;
+  color: white;
   font-family: 'Inter';
   font-size: 30px;
 }
@@ -27,7 +28,7 @@ header {
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  color: black;
+  color: White;
   font-family: 'Inter';
   font-size: 30px;
 }
