@@ -10,6 +10,7 @@ const EdgeList = () => {
 
   const [currentEdges, setCurrentEdges]: any = useState([]);
   useEffect(() => {
+    console.log(edges);
     const connections = edges.filter((edge: Edge) => {
       return edge.source === selectedNode;
     });

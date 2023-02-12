@@ -29,9 +29,6 @@ const LeftSidebar = () => {
               },
               settings: {
                 height: 0,
-                contactType: 'off',
-                communicationType: 'short',
-                signalDirectionality: 'uni',
               },
             },
           ]);

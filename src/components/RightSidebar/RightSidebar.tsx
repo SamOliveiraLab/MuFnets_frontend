@@ -1,46 +1,35 @@
-import React, { useContext } from 'react';
-import {
-  SelectedNodeContext,
-  NodesContext,
-  EdgesContext,
-  Node,
-  Edge,
-} from '../../pages/HomePage';
-import { Button, Typography } from '@mui/material';
+import { useContext } from 'react';
+import { SelectedNodeContext, SelectedEdgeContext } from '../../pages/HomePage';
+import { Typography } from '@mui/material';
 import NodeInformation from './NodeInformation';
 import EdgeList from './EdgeList';
+import DeleteNode from './DeleteNode';
+import EdgeInformation from './EdgeInformation';
 import './RightSidebar.css';
 
 const RightSidebar = () => {
-  const { selectedNode, setSelectedNode }: any =
-    useContext(SelectedNodeContext);
-  const { nodes, setNodes }: any = useContext(NodesContext);
-  const { edges, setEdges }: any = useContext(EdgesContext);
-
-  const handleDeleteNode = () => {
-    const newNodes = nodes.filter((node: Node) => {
-      return node.name != selectedNode;
-    });
-    setNodes(newNodes);
-    const newEdges = edges.filter((edge: Edge) => {
-      return !edge.name.includes(selectedNode);
-    });
-    setEdges(newEdges);
-    setSelectedNode('');
-  };
+  const { selectedNode }: any = useContext(SelectedNodeContext);
+  const { selectedEdge }: any = useContext(SelectedEdgeContext);
 
   return (
     <div className="rightsidebar-container">
-      {selectedNode != '' ? (
-        <div>
-          <Typography>Selected Node: {selectedNode}</Typography>
-          <NodeInformation />
-          <EdgeList />
-          <Button variant="contained" color="error" onClick={handleDeleteNode}>
-            Delete Node
-          </Button>
-        </div>
-      ) : null}
+      <div className="node-settings">
+        {selectedNode != '' ? (
+          <div>
+            <Typography>Selected Node: {selectedNode}</Typography>
+            <NodeInformation />
+            <EdgeList />
+            <DeleteNode />
+          </div>
+        ) : null}
+      </div>
+      <div className="edge-settings">
+        {selectedEdge.length > 0 ? (
+          <div>
+            <EdgeInformation />
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 };

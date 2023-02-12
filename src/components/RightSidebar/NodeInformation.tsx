@@ -49,42 +49,7 @@ const NodeInformation = () => {
           });
         }}
       />
-      <Typography variant="h6">Type of Contact:</Typography>
-      <Select
-        value={nodeInfo.contactType}
-        onChange={(e) => {
-          setNodeInfo((prev: any) => {
-            return { ...prev, contactType: e.target.value };
-          });
-        }}
-      >
-        <MenuItem value="on">On</MenuItem>
-        <MenuItem value="off">Off</MenuItem>
-      </Select>
-      <Typography variant="h6">Type of Communication:</Typography>
-      <Select
-        value={nodeInfo.communicationType}
-        onChange={(e) => {
-          setNodeInfo((prev: any) => {
-            return { ...prev, communicationType: e.target.value };
-          });
-        }}
-      >
-        <MenuItem value="short">Short Range</MenuItem>
-        <MenuItem value="long">Long Range</MenuItem>
-      </Select>
-      <Typography variant="h6">Signal Directionality:</Typography>
-      <Select
-        value={nodeInfo.signalDirectionality}
-        onChange={(e) => {
-          setNodeInfo((prev: any) => {
-            return { ...prev, signalDirectionality: e.target.value };
-          });
-        }}
-      >
-        <MenuItem value="uni">Unidirectional</MenuItem>
-        <MenuItem value="bi">Bidirectional</MenuItem>
-      </Select>
+
       <Button variant="contained" type="submit">
         Save Changes
       </Button>

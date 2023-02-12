@@ -31,6 +31,10 @@ const AddEdge = () => {
             name: `${selectedNode}->${targetNode}`,
             source: selectedNode,
             target: targetNode,
+            settings: {
+              contactType: 'off',
+              communicationType: 'long',
+            },
           },
         ]);
         setTargetNode('');

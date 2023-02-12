@@ -1,9 +1,14 @@
 import React, { useContext } from 'react';
-import { EdgesContext, SelectedNodeContext } from '../../pages/HomePage';
+import {
+  EdgesContext,
+  SelectedEdgeContext,
+  SelectedNodeContext,
+} from '../../pages/HomePage';
 
 const Connection = ({ edgeName }: any) => {
   const { edges, setEdges }: any = useContext(EdgesContext);
   const { selectedNode }: any = useContext(SelectedNodeContext);
+  const { setSelectedEdge }: any = useContext(SelectedEdgeContext);
   return (
     <div
       className="connection"
@@ -12,6 +17,7 @@ const Connection = ({ edgeName }: any) => {
           return edge.name !== `${selectedNode}->${edgeName}`;
         });
         setEdges(newEdges);
+        setSelectedEdge([]);
       }}
     >
       {edgeName}

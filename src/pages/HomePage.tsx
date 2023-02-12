@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 export const NodesContext: any = React.createContext([]);
 export const EdgesContext: any = React.createContext([]);
 export const SelectedNodeContext: any = React.createContext('');
+export const SelectedEdgeContext: any = React.createContext('');
 
 export type Node = {
   name: string;
@@ -17,9 +18,6 @@ export type Node = {
   };
   settings?: {
     height?: number;
-    contactType?: string;
-    communicationType?: string;
-    signalDirectionality?: string;
   };
 };
 
@@ -27,6 +25,9 @@ export type Edge = {
   name: string;
   source: string;
   target: string;
+  settings?: {
+    communicationType?: string;
+  };
 };
 
 const HomePage = () => {
@@ -34,39 +35,49 @@ const HomePage = () => {
     {
       name: 'A',
       attributes: { x: 1, y: 1, label: 'A', size: 10 },
-      settings: { height: 10, contactType: 'off' },
+      settings: { height: 10 },
     },
     {
       name: 'B',
       attributes: { x: 7, y: 1, label: 'B', size: 10 },
       settings: {
         height: 0,
-        contactType: 'on',
-        communicationType: 'short',
-        signalDirectionality: 'uni',
       },
     },
   ]);
 
   const [edges, setEdges] = useState<any>([
-    { name: 'A->B', source: 'A', target: 'B' },
-    { name: 'B->A', source: 'B', target: 'A' },
+    {
+      name: 'A->B',
+      source: 'A',
+      target: 'B',
+      settings: { communicationType: 'long' },
+    },
+    {
+      name: 'B->A',
+      source: 'B',
+      target: 'A',
+      settings: { communicationType: 'long' },
+    },
   ]);
 
-  const [selectedNode, setSelectedNode] = useState<any>('');
+  const [selectedNode, setSelectedNode] = useState<string>('');
+  const [selectedEdge, setSelectedEdge] = useState<string[]>([]);
 
   return (
-    <SelectedNodeContext.Provider value={{ selectedNode, setSelectedNode }}>
-      <EdgesContext.Provider value={{ edges, setEdges }}>
-        <NodesContext.Provider value={{ nodes, setNodes }}>
-          <div className="homepage-layout">
-            <LeftSidebar />
-            <Canvas />
-            <RightSidebar />
-          </div>
-        </NodesContext.Provider>
-      </EdgesContext.Provider>
-    </SelectedNodeContext.Provider>
+    <SelectedEdgeContext.Provider value={{ selectedEdge, setSelectedEdge }}>
+      <SelectedNodeContext.Provider value={{ selectedNode, setSelectedNode }}>
+        <EdgesContext.Provider value={{ edges, setEdges }}>
+          <NodesContext.Provider value={{ nodes, setNodes }}>
+            <div className="homepage-layout">
+              <LeftSidebar />
+              <Canvas />
+              <RightSidebar />
+            </div>
+          </NodesContext.Provider>
+        </EdgesContext.Provider>
+      </SelectedNodeContext.Provider>
+    </SelectedEdgeContext.Provider>
   );
 };
 

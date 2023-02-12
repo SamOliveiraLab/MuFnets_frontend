@@ -3,6 +3,7 @@ import {
   EdgesContext,
   NodesContext,
   SelectedNodeContext,
+  SelectedEdgeContext,
 } from '../../pages/HomePage';
 import {
   SigmaContainer,
@@ -28,7 +29,7 @@ const LoadGraphWithHook: FC = () => {
         graph.addNode(name, attributes);
       });
       edges.forEach(({ name, source, target }: any) => {
-        graph.addEdgeWithKey(name, source, target, { size: 5 });
+        graph.addEdgeWithKey(name, source, target, { size: 7 });
       });
 
       loadGraph(graph);
@@ -41,8 +42,9 @@ const LoadGraphWithHook: FC = () => {
     const registerEvents = useRegisterEvents();
     const sigma = useSigma();
     const [draggedNode, setDraggedNode] = useState<string | null>(null);
-    const { selectedNode, setSelectedNode }: any =
-      useContext(SelectedNodeContext);
+    const { edges }: any = useContext(EdgesContext);
+    const { setSelectedNode }: any = useContext(SelectedNodeContext);
+    const { setSelectedEdge }: any = useContext(SelectedEdgeContext);
 
     useEffect(() => {
       registerEvents({
@@ -100,7 +102,17 @@ const LoadGraphWithHook: FC = () => {
           setSelectedNode(e.node);
         },
         clickEdge: (e) => {
-          console.log(e.edge);
+          const node1 = e.edge.charAt(0);
+          const node2 = e.edge.charAt(e.edge.length - 1);
+          const parallel = edges.filter((edge: any) => {
+            return edge.name === `${node2}->${node1}`;
+          });
+
+          if (parallel.length == 1) {
+            setSelectedEdge([e.edge, parallel[0].name]);
+          } else {
+            setSelectedEdge([e.edge]);
+          }
         },
       });
     }, [registerEvents, sigma, draggedNode]);
