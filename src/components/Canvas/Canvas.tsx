@@ -13,6 +13,7 @@ import {
   ControlsContainer,
   ZoomControl,
 } from '@react-sigma/core';
+import { useLayoutCircular } from '@react-sigma/layout-circular';
 import { MultiDirectedGraph } from 'graphology';
 import '@react-sigma/core/lib/react-sigma.min.css';
 import './Canvas.css';
@@ -22,6 +23,7 @@ const LoadGraphWithHook: FC = () => {
     const loadGraph = useLoadGraph();
     const { nodes }: any = useContext(NodesContext);
     const { edges }: any = useContext(EdgesContext);
+    const { positions, assign } = useLayoutCircular();
 
     useEffect(() => {
       const graph = new MultiDirectedGraph();
@@ -32,8 +34,9 @@ const LoadGraphWithHook: FC = () => {
         graph.addEdgeWithKey(name, source, target, { size: 7 });
       });
 
+      assign();
       loadGraph(graph);
-    }, [loadGraph]);
+    }, [assign, loadGraph]);
 
     return null;
   };

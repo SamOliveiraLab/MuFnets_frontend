@@ -15,6 +15,7 @@ export type Node = {
     y: number;
     label: string;
     size: number;
+    color: string;
   };
   settings?: {
     height?: number;
@@ -31,35 +32,33 @@ export type Edge = {
 };
 
 const HomePage = () => {
-  const [nodes, setNodes] = useState<Node[]>([
-    {
-      name: 'A',
-      attributes: { x: 1, y: 1, label: 'A', size: 10 },
-      settings: { height: 10 },
-    },
-    {
-      name: 'B',
-      attributes: { x: 7, y: 1, label: 'B', size: 10 },
-      settings: {
-        height: 0,
-      },
-    },
-  ]);
+  const [nodes, setNodes] = useState<Node[]>([]);
 
-  const [edges, setEdges] = useState<any>([
-    {
-      name: 'A->B',
-      source: 'A',
-      target: 'B',
-      settings: { communicationType: 'long' },
-    },
-    {
-      name: 'B->A',
-      source: 'B',
-      target: 'A',
-      settings: { communicationType: 'long' },
-    },
-  ]);
+  // {
+  //   name: 'A',
+  //   attributes: { x: 1, y: 1, label: 'A', size: 15, color: 'blue' },
+  //   settings: { height: 10 },
+  // },
+  // {
+  //   name: 'B',
+  //   attributes: { x: 7, y: 1, label: 'B', size: 15, color: 'blue' },
+  //   settings: {
+  //     height: 0,
+  //   },
+  // },
+  // {
+  //   name: 'A->B',
+  //   source: 'A',
+  //   target: 'B',
+  //   settings: { communicationType: 'long' },
+  // },
+  // {
+  //   name: 'B->A',
+  //   source: 'B',
+  //   target: 'A',
+  //   settings: { communicationType: 'long' },
+  // },
+  const [edges, setEdges] = useState<any>([]);
 
   const [selectedNode, setSelectedNode] = useState<string>('');
   const [selectedEdge, setSelectedEdge] = useState<string[]>([]);

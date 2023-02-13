@@ -1,8 +1,9 @@
 import { Typography, TextField, Button } from '@mui/material';
 import { useState, useContext } from 'react';
 import { NodesContext } from '../../pages/HomePage';
-import './LeftSidebar.css';
+import CompileButton from './CompileButton';
 import UploadButton from './UploadButton';
+import './LeftSidebar.css';
 
 type SidebarProps = {};
 
@@ -25,7 +26,8 @@ const LeftSidebar = () => {
                 x: 12,
                 y: 1,
                 label: `${name}`,
-                size: 10,
+                size: 15,
+                color: 'blue',
               },
               settings: {
                 height: 0,
@@ -52,7 +54,10 @@ const LeftSidebar = () => {
           Create
         </Button>
       </form>
-      <UploadButton />
+      <div className="buttons-container">
+        <UploadButton />
+        <CompileButton />
+      </div>
     </div>
   );
 };

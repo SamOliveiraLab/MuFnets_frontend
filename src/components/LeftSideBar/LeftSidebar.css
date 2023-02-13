@@ -13,3 +13,9 @@
   flex-direction: column;
   width: 80%;
 }
+
+.buttons-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
