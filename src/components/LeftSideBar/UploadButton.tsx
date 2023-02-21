@@ -14,9 +14,9 @@ const UploadButton = () => {
       const newNodes = nodes.map((node: any) => {
         return {
           name: node,
-          attributes: { x: 7, y: 1, label: node, size: 15, color: 'blue' },
+          attributes: { x: 0, y: 0, label: node },
           settings: {
-            height: 0,
+            height: 10,
           },
         };
       });

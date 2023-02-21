@@ -23,14 +23,12 @@ const LeftSidebar = () => {
             {
               name: name,
               attributes: {
-                x: 12,
-                y: 1,
+                x: 0,
+                y: 0,
                 label: `${name}`,
-                size: 15,
-                color: 'blue',
               },
               settings: {
-                height: 0,
+                height: 10,
               },
             },
           ]);

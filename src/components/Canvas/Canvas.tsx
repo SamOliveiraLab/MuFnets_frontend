@@ -25,17 +25,36 @@ const LoadGraphWithHook: FC = () => {
     const { edges }: any = useContext(EdgesContext);
     const { positions, assign } = useLayoutCircular();
 
+    const selectColor = (height: number) => {
+      switch (height) {
+        case 10:
+          return 'blue';
+        case 15:
+          return 'red';
+        case 25:
+          return 'green';
+        case 35:
+          return 'yellow';
+      }
+    };
+
     useEffect(() => {
       const graph = new MultiDirectedGraph();
-      nodes.forEach(({ name, attributes }: any) => {
-        graph.addNode(name, attributes);
+      nodes.forEach(({ name, attributes, settings }: any) => {
+        const nodeAttributes = {
+          size: settings.height,
+          color: selectColor(settings.height),
+          ...attributes,
+        };
+        graph.addNode(name, nodeAttributes);
       });
+
       edges.forEach(({ name, source, target }: any) => {
         graph.addEdgeWithKey(name, source, target, { size: 7 });
       });
 
-      assign();
       loadGraph(graph);
+      assign();
     }, [assign, loadGraph]);
 
     return null;

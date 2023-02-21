@@ -7,9 +7,6 @@ const NodeInformation = () => {
   const { nodes, setNodes }: any = useContext(NodesContext);
   const [nodeInfo, setNodeInfo]: any = useState({
     height: 0,
-    contactType: 'off',
-    communicationType: 'short',
-    signalDirectionality: 'uni',
   });
 
   useEffect(() => {
@@ -41,15 +38,19 @@ const NodeInformation = () => {
       >
         Height:
       </Typography>
-      <TextField
-        value={nodeInfo.height && nodeInfo.height}
+      <Select
+        value={nodeInfo.height}
         onChange={(e) => {
           setNodeInfo((prev: any) => {
             return { ...prev, height: e.target.value };
           });
         }}
-      />
-
+      >
+        <MenuItem value={10}>0</MenuItem>
+        <MenuItem value={15}>1</MenuItem>
+        <MenuItem value={25}>2</MenuItem>
+        <MenuItem value={35}>3</MenuItem>
+      </Select>
       <Button variant="contained" type="submit">
         Save Changes
       </Button>

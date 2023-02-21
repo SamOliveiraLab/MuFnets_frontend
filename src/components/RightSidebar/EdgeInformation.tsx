@@ -19,8 +19,7 @@ const EdgeInformation = () => {
   //Handling Submission for uni and bi directional connections
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    const source = selectedEdge[0].charAt(0);
-    const target = selectedEdge[0].charAt(selectedEdge[0].length - 1);
+    const [source, target]: any = selectedEdge[0].split('->');
     const oldEdges = edges.filter((edge: Edge) => {
       return (
         edge.name !== `${source}->${target}` &&
@@ -68,5 +67,3 @@ const EdgeInformation = () => {
 };
 
 export default EdgeInformation;
-{
-}
