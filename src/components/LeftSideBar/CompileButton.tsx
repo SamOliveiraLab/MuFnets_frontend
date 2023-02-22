@@ -2,6 +2,7 @@ import { Button } from '@mui/material';
 import { useContext } from 'react';
 import { EdgesContext, NodesContext, Edge, Node } from '../../pages/HomePage';
 import { useOutletContext, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const CompileButton = () => {
   const { edges }: any = useContext(EdgesContext);
@@ -26,6 +27,17 @@ const CompileButton = () => {
     // link.download = 'data.json';
     // link.click();
     setOuput(JSON.stringify(output));
+    console.log(JSON.stringify(output));
+    axios
+      .post('http://127.0.0.1:5000', {
+        graph: output,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     navigate('/output');
   };
   return (
