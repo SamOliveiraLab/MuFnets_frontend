@@ -52,7 +52,7 @@ const AddEdge = () => {
     <form onSubmit={handleSubmit}>
       <TextField
         variant="standard"
-        label="Enter Edge Name"
+        label="Enter Node Name"
         value={targetNode}
         onChange={(e) => {
           setTargetNode(e.target.value);

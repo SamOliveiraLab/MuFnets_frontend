@@ -40,7 +40,7 @@ const UploadButton = () => {
           name: edge,
           source: source,
           target: target,
-          settings: { communicationType: 'long' },
+          settings: { communicationType: 'long', communicationSpeed: 'fast' },
         };
       });
 
