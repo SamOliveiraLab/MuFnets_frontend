@@ -4,6 +4,7 @@ import {
   NodesContext,
   SelectedNodeContext,
   SelectedEdgeContext,
+  NodeColorsContext,
 } from '../../pages/HomePage';
 import {
   SigmaContainer,
@@ -23,34 +24,25 @@ const LoadGraphWithHook: FC = () => {
     const loadGraph = useLoadGraph();
     const { nodes }: any = useContext(NodesContext);
     const { edges }: any = useContext(EdgesContext);
-    const { positions, assign } = useLayoutCircular();
-
-    const selectColor = (height: number) => {
-      switch (height) {
-        case 10:
-          return 'blue';
-        case 15:
-          return 'red';
-        case 25:
-          return 'green';
-        case 35:
-          return 'yellow';
-      }
-    };
+    const { nodeColors }: any = useContext(NodeColorsContext);
+    const { assign } = useLayoutCircular();
 
     useEffect(() => {
       const graph = new MultiDirectedGraph();
       nodes.forEach(({ name, attributes, settings }: any) => {
         const nodeAttributes = {
           size: settings.height,
-          color: selectColor(settings.height),
+          color: attributes.color,
           ...attributes,
         };
         graph.addNode(name, nodeAttributes);
       });
 
       edges.forEach(({ name, source, target }: any) => {
-        graph.addEdgeWithKey(name, source, target, { size: 7 });
+        graph.addEdgeWithKey(name, source, target, {
+          size: 7,
+          color: nodeColors[source],
+        });
       });
 
       loadGraph(graph);
@@ -63,7 +55,6 @@ const LoadGraphWithHook: FC = () => {
   const GraphEvents: FC = () => {
     const registerEvents = useRegisterEvents();
     const sigma = useSigma();
-    const [draggedNode, setDraggedNode] = useState<string | null>(null);
     const { edges }: any = useContext(EdgesContext);
     const { setSelectedNode }: any = useContext(SelectedNodeContext);
     const { setSelectedEdge }: any = useContext(SelectedEdgeContext);
@@ -71,61 +62,21 @@ const LoadGraphWithHook: FC = () => {
     useEffect(() => {
       registerEvents({
         downNode: (e) => {
-          setDraggedNode(e.node);
           sigma.getGraph().setNodeAttribute(e.node, 'highlighted', true);
-        },
-        mouseup: (e) => {
-          if (draggedNode) {
-            setDraggedNode(null);
-            sigma.getGraph().removeNodeAttribute(draggedNode, 'highlighted');
-          }
         },
         mousedown: (e) => {
           // Disable the autoscale at the first down interaction
           if (!sigma.getCustomBBox()) sigma.setCustomBBox(sigma.getBBox());
         },
-        mousemove: (e) => {
-          if (draggedNode) {
-            // Get new position of node
-            const pos = sigma.viewportToGraph(e);
-            sigma.getGraph().setNodeAttribute(draggedNode, 'x', pos.x);
-            sigma.getGraph().setNodeAttribute(draggedNode, 'y', pos.y);
-
-            // Prevent sigma to move camera:
-            e.preventSigmaDefault();
-            e.original.preventDefault();
-            e.original.stopPropagation();
-          }
-        },
-        touchup: (e) => {
-          if (draggedNode) {
-            setDraggedNode(null);
-            sigma.getGraph().removeNodeAttribute(draggedNode, 'highlighted');
-          }
-        },
         touchdown: (e) => {
           // Disable the autoscale at the first down interaction
           if (!sigma.getCustomBBox()) sigma.setCustomBBox(sigma.getBBox());
-        },
-        touchmove: (e) => {
-          if (draggedNode) {
-            // Get new position of node
-            const pos = sigma.viewportToGraph(e);
-            sigma.getGraph().setNodeAttribute(draggedNode, 'x', pos.x);
-            sigma.getGraph().setNodeAttribute(draggedNode, 'y', pos.y);
-
-            // Prevent sigma to move camera:
-            e.preventSigmaDefault();
-            e.original.preventDefault();
-            e.original.stopPropagation();
-          }
         },
         clickNode: (e) => {
           setSelectedNode(e.node);
         },
         clickEdge: (e) => {
-          const node1 = e.edge.charAt(0);
-          const node2 = e.edge.charAt(e.edge.length - 1);
+          const [node1, node2]: string[] = e.edge.split('->');
           const parallel = edges.filter((edge: any) => {
             return edge.name === `${node2}->${node1}`;
           });
@@ -137,7 +88,7 @@ const LoadGraphWithHook: FC = () => {
           }
         },
       });
-    }, [registerEvents, sigma, draggedNode]);
+    }, [registerEvents, sigma]);
 
     return null;
   };

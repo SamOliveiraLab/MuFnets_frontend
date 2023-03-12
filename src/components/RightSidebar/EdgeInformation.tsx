@@ -7,6 +7,7 @@ const EdgeInformation = () => {
   const { edges, setEdges }: any = useContext(EdgesContext);
   const [edgeSettings, setEdgeSettings]: any = useState({
     communicationType: 'long',
+    communicationSpeed: 'fast',
   });
 
   useEffect(() => {
@@ -58,6 +59,19 @@ const EdgeInformation = () => {
         <MenuItem value="contact">Contact</MenuItem>
         <MenuItem value="short">Short Range</MenuItem>
         <MenuItem value="long">Long Range</MenuItem>
+      </Select>
+      <Typography variant="h6">Speed of Communication:</Typography>
+      <Select
+        value={edgeSettings.communicationSpeed}
+        onChange={(e) => {
+          setEdgeSettings((prev: any) => {
+            return { ...prev, communicationSpeed: e.target.value };
+          });
+        }}
+      >
+        <MenuItem value="slow">Slow</MenuItem>
+        <MenuItem value="medium">Medium</MenuItem>
+        <MenuItem value="fast">Fast</MenuItem>
       </Select>
       <Button variant="contained" type="submit">
         Save Changes

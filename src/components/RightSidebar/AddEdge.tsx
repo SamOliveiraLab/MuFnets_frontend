@@ -32,8 +32,8 @@ const AddEdge = () => {
             source: selectedNode,
             target: targetNode,
             settings: {
-              contactType: 'off',
               communicationType: 'long',
+              communicationSpeed: 'fast',
             },
           },
         ]);

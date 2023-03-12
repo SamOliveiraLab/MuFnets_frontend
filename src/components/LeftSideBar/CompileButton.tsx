@@ -15,25 +15,17 @@ const CompileButton = () => {
       const comType = settings?.communicationType?.charAt(0).toUpperCase();
       return `${source}:${comType}:${target}:1`;
     });
-    const outputNodes = nodes.map(({ name, settings }: Node) => {
-      return { name, settings };
+    const outputNodes = nodes.map(({ name }: Node) => {
+      return name;
     });
     const output = { Edges: outputEdges, Nodes: outputNodes };
-    // const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
-    //   JSON.stringify(output)
-    // )}`;
-    // const link = document.createElement('a');
-    // link.href = jsonString;
-    // link.download = 'data.json';
-    // link.click();
-    setOuput(JSON.stringify(output));
-    console.log(JSON.stringify(output));
     axios
       .post('http://127.0.0.1:5000', {
         graph: output,
       })
       .then((res) => {
-        console.log(res);
+        console.log(JSON.stringify(res.data));
+        setOuput(JSON.stringify(res.data));
       })
       .catch((err) => {
         console.log(err);
@@ -46,6 +38,7 @@ const CompileButton = () => {
       color="secondary"
       onClick={handleCompile}
       disabled={edges.length === 0}
+      style={{ width: '80%', borderRadius: 30, fontSize: '.85rem' }}
     >
       Compile
     </Button>

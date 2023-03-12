@@ -1,10 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
-import { Typography, TextField, Select, MenuItem, Button } from '@mui/material';
+import { Typography, Select, MenuItem, Button } from '@mui/material';
 import { SelectedNodeContext, NodesContext, Node } from '../../pages/HomePage';
+import { UpdateContext } from '../../pages/HomePage';
 
 const NodeInformation = () => {
   const { selectedNode }: any = useContext(SelectedNodeContext);
   const { nodes, setNodes }: any = useContext(NodesContext);
+  const { update, setUpdate }: any = useContext(UpdateContext);
   const [nodeInfo, setNodeInfo]: any = useState({
     height: 0,
   });
@@ -20,24 +22,20 @@ const NodeInformation = () => {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        const prevNodes = nodes.filter((node: Node) => {
-          return node.name != selectedNode;
-        });
+        const tempNodes = nodes;
         const oldNode = nodes.filter((node: Node) => {
           return node.name === selectedNode;
         });
+        const oldNodeIndex = nodes.findIndex((node: Node) => {
+          return node.name === selectedNode;
+        });
         const newNode = { ...oldNode[0], settings: nodeInfo };
-        setNodes([...prevNodes, newNode]);
+        tempNodes.splice(oldNodeIndex, 1, newNode);
+        setNodes(tempNodes);
+        setUpdate(!update);
       }}
     >
-      <Typography
-        variant="h6"
-        onClick={() => {
-          console.log(nodeInfo);
-        }}
-      >
-        Height:
-      </Typography>
+      <Typography variant="h6">Height:</Typography>
       <Select
         value={nodeInfo.height}
         onChange={(e) => {

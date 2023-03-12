@@ -1,21 +1,57 @@
 .leftsidebar-container {
   border-right: 1px black solid;
-  flex: 1;
   padding: 3px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  flex: 1;
 }
 
 .leftsidebar-form {
+  flex: 2;
   display: flex;
   flex-direction: column;
   width: 80%;
 }
 
 .buttons-container {
+  flex: 1;
   width: 100%;
   display: flex;
+  flex-flow: column;
   justify-content: space-around;
+  align-items: center;
+}
+
+.node-and-edge-list {
+  flex: 2;
+  display: flex;
+  flex-flow: row wrap;
+  border-top: 1px solid black;
+  width: 100%;
+  border-bottom: black 1px solid;
+}
+
+.nodes-list {
+  flex: 1;
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+}
+
+.nodes-list-node:hover {
+  color: lightgray;
+  cursor: pointer;
+}
+
+.edges-list {
+  flex: 1;
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+}
+
+.edges-list-edge:hover {
+  color: lightgray;
+  cursor: pointer;
 }
