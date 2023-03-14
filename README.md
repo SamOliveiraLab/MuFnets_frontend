@@ -14,10 +14,10 @@ Once you are done creating the graph you can hit the compile button on the left 
 
 ## Getting Started
 
-1. Fork this repository
+1. Fork this repository and download the code
 2. Open the directory in your terminal
-3. run `yarn install` or `npm install` to install dependencies (both work)
-4. run `yarn run dev` or `npm run dev`
+3. Run `yarn install` or `npm install` to install dependencies (both work)
+4. Run `yarn run dev` or `npm run dev`
 5. The test server will now be running in your browser
 
 ## Major Components
@@ -38,3 +38,9 @@ Here is a list of major components:
 
 - Output
   - This page is where the output from a compiled graph will go
+
+## Technology Used
+
+- React + Typescript: building the UI
+- React Sigma + SigmaJS + Graphology: creating the graphical representation on the canvas
+- CSS + Material UI: styling components
