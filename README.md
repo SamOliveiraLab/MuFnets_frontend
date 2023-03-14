@@ -10,9 +10,11 @@ When you first use the tool, you are immediately taken to the canvas, which is w
 
 As you create the graph, it will be displayed on the canvas in the middle of the screen. Here you can click on the nodes and edges to select them and edit their respective settings through the right sidebar. Whenever a new node is created, it is assigned a color at random to distinguish it from the rest of the nodes. The color of the edges is determined by the source node of the edge.
 
-<img width="1779" alt="Screenshot 2023-02-28 at 4 23 23 PM" src="https://user-images.githubusercontent.com/44075324/224884328-7de1cb11-6bf0-4da3-ba3c-2e19dd14b56b.png">
+![127 0 0 1_5174_ (1)](https://user-images.githubusercontent.com/44075324/224884613-6f9e15ff-7854-4e00-9fa6-ea3101ef86e0.png)
 
 Once you are done creating the graph you can hit the compile button on the left sidebar to see the output. This app will then send the graph that you created to the Mufnets algorithm which will process the graph and output the cell network.
+
+<img width="1779" alt="Screenshot 2023-02-28 at 4 23 23 PM" src="https://user-images.githubusercontent.com/44075324/224884328-7de1cb11-6bf0-4da3-ba3c-2e19dd14b56b.png">
 
 ## Getting Started
 
