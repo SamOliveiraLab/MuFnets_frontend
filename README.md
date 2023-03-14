@@ -6,14 +6,18 @@
 
 This tool includes 2 mains functions, the canvas (input) and output.
 
-When you first use the tool, you are immediately taken to the canvas, which is where are you able to create a cell to cell topogy from scratch or you are able to input one from a json file.
+When you first use the tool, you are immediately taken to the canvas, which is where are you able to create a cell to cell topology from scratch or you are able to input one from a json file.
+
+As you create the graph, it will be displayed on the canvas in the middle of the screen. Here you can click on the nodes and edges to select them and edit their respective settings through the right sidebar. Whenever a new node is created, it is assigned a color at random to distinguish it from the rest of the nodes. The color of the edges is determined by the source node of the edge.
+
+Once you are done creating the graph you can hit the compile button on the left sidebar to see the output. This app will then send the graph that you created to the Mufnets algorithm which will process the graph and output the cell network.
 
 ## Getting Started
 
 1. Fork this repository
 2. Open the directory in your terminal
-3. run yarn install or npm install to install dependencies (both work)
-4. run yarn run dev or npm run dev
+3. run `yarn install` or `npm install` to install dependencies (both work)
+4. run `yarn run dev` or `npm run dev`
 5. The test server will now be running in your browser
 
 ## Major Components
