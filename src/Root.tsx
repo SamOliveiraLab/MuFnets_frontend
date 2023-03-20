@@ -3,16 +3,14 @@ import { Outlet } from 'react-router-dom';
 import { useState } from 'react';
 
 const Root = () => {
-  const [output, setOuput] = useState<any>(
-    'No output yet, compile a graph to view its output'
-  );
+  const [output, setOutput] = useState<any>('');
 
   const [prevGraph, setPrevGraph] = useState<any>(null);
   return (
     <>
       <Navbar />
       <main>
-        <Outlet context={{ output, setOuput, prevGraph, setPrevGraph }} />
+        <Outlet context={{ output, setOutput, prevGraph, setPrevGraph }} />
       </main>
     </>
   );

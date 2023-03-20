@@ -5,7 +5,7 @@ import {
   SelectedNodeContext,
   SelectedEdgeContext,
   NodeColorsContext,
-} from '../../pages/HomePage';
+} from '../../../pages/HomePage';
 import {
   SigmaContainer,
   useLoadGraph,

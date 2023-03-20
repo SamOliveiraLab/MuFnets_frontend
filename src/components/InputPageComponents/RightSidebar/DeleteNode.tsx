@@ -7,7 +7,7 @@ import {
   SelectedNodeContext,
   Node,
   Edge,
-} from '../../pages/HomePage';
+} from '../../../pages/HomePage';
 
 const DeleteNode = () => {
   const { nodes, setNodes }: any = useContext(NodesContext);

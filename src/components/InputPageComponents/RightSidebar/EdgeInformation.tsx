@@ -1,6 +1,10 @@
 import { MenuItem, Select, Typography, Button } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
-import { Edge, EdgesContext, SelectedEdgeContext } from '../../pages/HomePage';
+import {
+  Edge,
+  EdgesContext,
+  SelectedEdgeContext,
+} from '../../../pages/HomePage';
 
 const EdgeInformation = () => {
   const { selectedEdge }: any = useContext(SelectedEdgeContext);

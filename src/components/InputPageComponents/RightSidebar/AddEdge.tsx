@@ -6,7 +6,7 @@ import {
   EdgesContext,
   Edge,
   Node,
-} from '../../pages/HomePage';
+} from '../../../pages/HomePage';
 
 const AddEdge = () => {
   const [targetNode, setTargetNode] = useState<string>('');

@@ -3,7 +3,7 @@ import {
   EdgesContext,
   SelectedEdgeContext,
   SelectedNodeContext,
-} from '../../pages/HomePage';
+} from '../../../pages/HomePage';
 
 const Connection = ({ edgeName }: any) => {
   const { edges, setEdges }: any = useContext(EdgesContext);

@@ -1,5 +1,8 @@
 import { useContext } from 'react';
-import { SelectedNodeContext, SelectedEdgeContext } from '../../pages/HomePage';
+import {
+  SelectedNodeContext,
+  SelectedEdgeContext,
+} from '../../../pages/HomePage';
 import { Typography } from '@mui/material';
 import NodeInformation from './NodeInformation';
 import EdgeList from './EdgeList';

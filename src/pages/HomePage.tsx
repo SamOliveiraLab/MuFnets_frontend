@@ -1,6 +1,6 @@
-import LeftSidebar from '../components/LeftSideBar/LeftSidebar';
-import Canvas from '../components/Canvas/Canvas';
-import RightSidebar from '../components/RightSidebar/RightSidebar';
+import LeftSidebar from '../components/InputPageComponents/LeftSideBar/LeftSidebar';
+import Canvas from '../components/InputPageComponents/Canvas/Canvas';
+import RightSidebar from '../components/InputPageComponents/RightSidebar/RightSidebar';
 import React, { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 

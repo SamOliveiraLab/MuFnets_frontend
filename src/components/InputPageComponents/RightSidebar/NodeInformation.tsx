@@ -1,7 +1,11 @@
 import { useContext, useEffect, useState } from 'react';
 import { Typography, Select, MenuItem, Button } from '@mui/material';
-import { SelectedNodeContext, NodesContext, Node } from '../../pages/HomePage';
-import { UpdateContext } from '../../pages/HomePage';
+import {
+  SelectedNodeContext,
+  NodesContext,
+  Node,
+} from '../../../pages/HomePage';
+import { UpdateContext } from '../../../pages/HomePage';
 
 const NodeInformation = () => {
   const { selectedNode }: any = useContext(SelectedNodeContext);

@@ -1,13 +1,18 @@
 import { Button } from '@mui/material';
 import { useContext } from 'react';
-import { EdgesContext, NodesContext, Edge, Node } from '../../pages/HomePage';
+import {
+  EdgesContext,
+  NodesContext,
+  Edge,
+  Node,
+} from '../../../pages/HomePage';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const CompileButton = () => {
   const { edges }: any = useContext(EdgesContext);
   const { nodes }: any = useContext(NodesContext);
-  const { setOuput }: any = useOutletContext();
+  const { setOutput }: any = useOutletContext();
   const navigate = useNavigate();
 
   const handleCompile = () => {
@@ -24,8 +29,7 @@ const CompileButton = () => {
         graph: output,
       })
       .then((res) => {
-        console.log(JSON.stringify(res.data));
-        setOuput(JSON.stringify(res.data));
+        setOutput(JSON.stringify(res.data));
       })
       .catch((err) => {
         console.log(err);

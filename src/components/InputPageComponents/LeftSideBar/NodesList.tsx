@@ -4,7 +4,7 @@ import {
   SelectedNodeContext,
   Node,
   NodeColorsContext,
-} from '../../pages/HomePage';
+} from '../../../pages/HomePage';
 import { Typography } from '@mui/material';
 
 const NodesList = () => {

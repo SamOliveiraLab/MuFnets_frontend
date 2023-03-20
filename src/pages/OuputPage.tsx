@@ -1,9 +1,11 @@
-import React from 'react';
-import { useOutletContext } from 'react-router-dom';
+import OutputDisplay from '../components/OutputPageComponents/OutputDisplay/OutputDisplay';
 
 const OuputPage = () => {
-  const { output }: any = useOutletContext();
-  return <div>{output}</div>;
+  return (
+    <div>
+      <OutputDisplay />
+    </div>
+  );
 };
 
 export default OuputPage;

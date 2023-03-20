@@ -4,9 +4,9 @@ import {
   EdgesContext,
   NodeColorsContext,
   Node,
-} from '../../pages/HomePage';
+} from '../../../pages/HomePage';
 import { Button } from '@mui/material';
-import { getMyColor } from '../../scripts.js';
+import { getMyColor } from '../../../scripts.js';
 
 const UploadButton = () => {
   const { setNodes }: any = useContext(NodesContext);

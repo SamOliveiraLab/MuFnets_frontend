@@ -5,7 +5,7 @@ import {
   EdgesContext,
   Edge,
   NodeColorsContext,
-} from '../../pages/HomePage';
+} from '../../../pages/HomePage';
 
 const EdgeList = () => {
   const { edges }: any = useContext(EdgesContext);
@@ -18,7 +18,6 @@ const EdgeList = () => {
         Edges
       </Typography>
       {edges.map((edge: Edge) => {
-        console.log(nodeColors);
         return (
           <Typography
             key={`${edge.source}->${edge.target}`}
