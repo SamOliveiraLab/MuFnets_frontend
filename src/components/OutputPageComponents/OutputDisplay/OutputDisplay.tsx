@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, createRef } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, ReferenceLine } from 'recharts';
 
@@ -7,8 +7,7 @@ const OutputDisplay = () => {
   const [currentNetwork, setCurrentNetwork] = useState<any>(null);
   useEffect(() => {
     if (output != '') {
-      const [predArray, topoOrder, orderedAdj, endpoints, unfolded] =
-        JSON.parse(output);
+      const { predArray, topoOrder, orderedAdj, endpoints, unfolded } = output;
       const sources = Object.keys(orderedAdj);
       const values = sources.map((key: string) => {
         const [row, target] = orderedAdj[key][0];

@@ -29,7 +29,9 @@ const CompileButton = () => {
         graph: output,
       })
       .then((res) => {
-        setOutput(JSON.stringify(res.data));
+        const [predArray, topoOrder, orderedAdj, endpoints, unfolded] =
+          res.data;
+        setOutput({ predArray, topoOrder, orderedAdj, endpoints, unfolded });
       })
       .catch((err) => {
         console.log(err);

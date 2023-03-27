@@ -19,42 +19,54 @@ const UploadButton = () => {
     reader.readAsText(e.target.files[0], 'UTF-8');
     reader.onload = (e: any) => {
       //Separate Nodes and Edges from the file
-      const { nodes, edges }: any = JSON.parse(e.target.result);
+      const { nodes, edges, downloaded }: any = JSON.parse(e.target.result);
 
-      //Create the nodes array
-      const newNodes = nodes.map((node: any) => {
-        const color = getMyColor();
-        return {
-          name: node,
-          attributes: { x: 0, y: 0, label: node, color: color },
-          settings: {
-            height: 10,
-          },
-        };
-      });
+      if (downloaded) {
+        const colors = nodes.reduce((accumulator: any, node: Node) => {
+          return {
+            ...accumulator,
+            [node.name]: node.attributes.color,
+          };
+        }, {});
 
-      //Create the edges list
-      const newEdges = edges.map((edge: any) => {
-        const [source, target]: any = edge.split('->');
-        return {
-          name: edge,
-          source: source,
-          target: target,
-          settings: { communicationType: 'long', communicationSpeed: 'fast' },
-        };
-      });
+        setNodeColors(colors);
+        setNodes(nodes);
+        setEdges(edges);
+      } else {
+        const newNodes = nodes.map((node: any) => {
+          const color = getMyColor();
+          return {
+            name: node,
+            attributes: { x: 0, y: 0, label: node, color: color },
+            settings: {
+              height: 10,
+            },
+          };
+        });
 
-      //Create the colors object
-      const colors = newNodes.reduce((accumulator: any, node: Node) => {
-        return {
-          ...accumulator,
-          [node.name]: node.attributes.color,
-        };
-      }, {});
+        //Create the edges list
+        const newEdges = edges.map((edge: any) => {
+          const [source, target]: any = edge.split('->');
+          return {
+            name: edge,
+            source: source,
+            target: target,
+            settings: { communicationType: 'long', communicationSpeed: 'fast' },
+          };
+        });
 
-      setNodeColors(colors);
-      setNodes(newNodes);
-      setEdges(newEdges);
+        //Create the colors object
+        const colors = newNodes.reduce((accumulator: any, node: Node) => {
+          return {
+            ...accumulator,
+            [node.name]: node.attributes.color,
+          };
+        }, {});
+
+        setNodeColors(colors);
+        setNodes(newNodes);
+        setEdges(newEdges);
+      }
     };
   };
 

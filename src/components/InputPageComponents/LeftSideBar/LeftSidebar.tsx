@@ -3,8 +3,8 @@ import UploadButton from './UploadButton';
 import EdgesList from './EdgesList';
 import NodesList from './NodesList';
 import CreateNodeForm from './CreateNodeForm';
+import CanvasDownloadButton from './CanvasDownloadButton';
 import './LeftSidebar.css';
-import DownloadButton from './DownloadButton';
 
 const LeftSidebar = () => {
   return (
@@ -17,7 +17,7 @@ const LeftSidebar = () => {
       <div className="buttons-container">
         <UploadButton />
         <CompileButton />
-        <DownloadButton />
+        <CanvasDownloadButton />
       </div>
     </div>
   );
