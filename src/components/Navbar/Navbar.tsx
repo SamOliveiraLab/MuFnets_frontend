@@ -12,8 +12,8 @@ const Navbar: FC = () => {
         </NavLink>
       </div>
       <div className="links-container">
-        <NavLink className="nav-link" to="/about">
-          About
+        <NavLink className="nav-link" to="/">
+          Input
         </NavLink>
         <NavLink className="nav-link" to="/output">
           Output

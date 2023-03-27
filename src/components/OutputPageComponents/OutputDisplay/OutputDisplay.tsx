@@ -47,6 +47,7 @@ const OutputDisplay = () => {
             padding={{ top: 30, bottom: 30 }}
           />
           {currentNetwork.topoOrder.map((cell: string) => {
+            //Full Length for now, waiting on algorithm
             const endpoint = currentNetwork.endpoints[cell]
               ? currentNetwork.endpoints[cell]
               : currentNetwork.values.length - 1;
