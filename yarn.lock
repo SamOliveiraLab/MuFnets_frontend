@@ -584,6 +584,11 @@
   resolved "https://registry.yarnpkg.com/@react-sigma/core/-/core-3.2.0.tgz#76caf10a2c0b7f116f8206438665ecc937257200"
   integrity sha512-+nT03EGfzUymqlGRYAHWicGXWAf4MuZuWxT8/vG+N9FypFtGe5DvYaK85/5NEh1eyxpHaAPfOFLIGJrynpxPHA==
 
+"@react-sigma/core@^3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@react-sigma/core/-/core-3.4.0.tgz#6da4b09d823b3520feb5948d6ca195843b770b8b"
+  integrity sha512-IfP3tMqYHgdrTG4Pc3xqAb8xqwScMjQfhAfLt1yGNiBPaFuunxGOmDEZ8Q6/DQMqkkTksxq4C30W3C7aRC42Tg==
+
 "@react-sigma/layout-circular@^3.2.0":
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/@react-sigma/layout-circular/-/layout-circular-3.2.0.tgz#13758ccc892e1fb8a51dfcaa624a80995d4ae879"
@@ -598,12 +603,12 @@
   dependencies:
     "@react-sigma/core" "^3.2.0"
 
-"@react-sigma/layout-forceatlas2@^3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@react-sigma/layout-forceatlas2/-/layout-forceatlas2-3.2.0.tgz#131394c7e9bdfc0ed3590d082d3771840ef8987e"
-  integrity sha512-RM5r5S0X3jR8WTKry+wQ5QFs6EUjoADLsFyW5hamVYt8wgDUc9Ycp1Vk4szkibj49qJnp/9fpZ2eW31u3treUQ==
+"@react-sigma/layout-core@^3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@react-sigma/layout-core/-/layout-core-3.4.0.tgz#1cef774dcedd469def4673111d1e76a7e4e5ad11"
+  integrity sha512-SgBHf3ftCZ38bmXXitnOXu5nazSX+4XiZbcFs9XUH+G0xwQYlIO4NZI2YFjkMav2dPOcU/sVghdnMpBn+jorwQ==
   dependencies:
-    "@react-sigma/layout-core" "^3.2.0"
+    "@react-sigma/core" "^3.4.0"
 
 "@remix-run/router@1.2.1":
   version "1.2.1"

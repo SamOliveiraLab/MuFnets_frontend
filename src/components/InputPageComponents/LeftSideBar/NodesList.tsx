@@ -13,7 +13,7 @@ const NodesList = () => {
   const { nodeColors }: any = useContext(NodeColorsContext);
 
   return (
-    <div className="nodes-list">
+    <div className="list-items">
       <Typography fontSize={15} fontWeight="bold">
         Nodes
       </Typography>

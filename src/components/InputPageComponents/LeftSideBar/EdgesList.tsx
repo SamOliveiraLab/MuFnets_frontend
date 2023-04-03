@@ -13,7 +13,7 @@ const EdgeList = () => {
   const { nodeColors }: any = useContext(NodeColorsContext);
 
   return (
-    <div className="edges-list">
+    <div className="list-items">
       <Typography fontSize={15} fontWeight="bold">
         Edges
       </Typography>

@@ -28,8 +28,8 @@ const OutputDisplay = () => {
     <div className="display-container">
       {currentNetwork && (
         <LineChart
-          width={730}
-          height={500}
+          width={1000}
+          height={700}
           margin={{ top: 10, right: 20, left: 0, bottom: 0 }}
         >
           <XAxis

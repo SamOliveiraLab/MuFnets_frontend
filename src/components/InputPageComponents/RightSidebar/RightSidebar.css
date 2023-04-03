@@ -28,3 +28,15 @@
 .connection:hover {
   text-decoration: line-through;
 }
+
+.connected-edge-list {
+  max-height: 25vh;
+  overflow-y: scroll;
+}
+.connected-edge-list {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+.connected-edge-list::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}

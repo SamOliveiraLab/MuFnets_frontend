@@ -13,6 +13,7 @@ import {
   useSigma,
   ControlsContainer,
   ZoomControl,
+  useSetSettings,
 } from '@react-sigma/core';
 import { useLayoutCircular } from '@react-sigma/layout-circular';
 import { MultiDirectedGraph } from 'graphology';
@@ -40,7 +41,7 @@ const LoadGraphWithHook: FC = () => {
 
       edges.forEach(({ name, source, target }: any) => {
         graph.addEdgeWithKey(name, source, target, {
-          size: 7,
+          size: 5,
           color: nodeColors[source],
         });
       });
@@ -58,6 +59,8 @@ const LoadGraphWithHook: FC = () => {
     const { edges }: any = useContext(EdgesContext);
     const { setSelectedNode }: any = useContext(SelectedNodeContext);
     const { setSelectedEdge }: any = useContext(SelectedEdgeContext);
+    const setSettings = useSetSettings();
+    const [hoveredNode, setHoveredNode] = useState<string | null>(null);
 
     useEffect(() => {
       registerEvents({
@@ -87,8 +90,44 @@ const LoadGraphWithHook: FC = () => {
             setSelectedEdge([e.edge]);
           }
         },
+        enterNode: (event) => setHoveredNode(event.node),
+        leaveNode: () => setHoveredNode(null),
       });
     }, [registerEvents, sigma]);
+
+    useEffect(() => {
+      setSettings({
+        nodeReducer: (node, data) => {
+          const graph = sigma.getGraph();
+          const newData: any = {
+            ...data,
+            highlighted: data.highlighted || false,
+          };
+
+          if (hoveredNode) {
+            if (
+              node === hoveredNode ||
+              graph.neighbors(hoveredNode).includes(node)
+            ) {
+              newData.highlighted = true;
+            } else {
+              newData.color = '#E2E2E2';
+              newData.highlighted = false;
+            }
+          }
+          return newData;
+        },
+        edgeReducer: (edge, data) => {
+          const graph = sigma.getGraph();
+          const newData = { ...data, hidden: false };
+
+          if (hoveredNode && !graph.extremities(edge).includes(hoveredNode)) {
+            newData.hidden = true;
+          }
+          return newData;
+        },
+      });
+    }, [hoveredNode, setSettings, sigma]);
 
     return null;
   };
