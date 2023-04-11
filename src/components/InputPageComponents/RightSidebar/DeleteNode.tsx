@@ -3,7 +3,6 @@ import { useContext } from 'react';
 import {
   NodesContext,
   EdgesContext,
-  SelectedEdgeContext,
   SelectedNodeContext,
   Node,
   Edge,
@@ -16,19 +15,26 @@ const DeleteNode = () => {
     useContext(SelectedNodeContext);
 
   const handleDeleteNode = () => {
+    const temp = selectedNode;
+    setSelectedNode('');
     const newNodes = nodes.filter((node: Node) => {
-      return node.name != selectedNode;
+      return node.name != temp;
     });
     setNodes(newNodes);
     const newEdges = edges.filter((edge: Edge) => {
-      return !edge.name.includes(selectedNode);
+      return !edge.name.includes(temp);
     });
     setEdges(newEdges);
-    setSelectedNode('');
   };
 
   return (
-    <Button variant="contained" color="error" onClick={handleDeleteNode}>
+    <Button
+      variant="contained"
+      color="error"
+      onClick={() => {
+        handleDeleteNode();
+      }}
+    >
       Delete Node
     </Button>
   );

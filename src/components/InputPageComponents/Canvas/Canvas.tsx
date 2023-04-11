@@ -21,11 +21,12 @@ import '@react-sigma/core/lib/react-sigma.min.css';
 import './Canvas.css';
 
 const LoadGraphWithHook: FC = () => {
+  const { nodes }: any = useContext(NodesContext);
+  const { edges }: any = useContext(EdgesContext);
+  const { nodeColors }: any = useContext(NodeColorsContext);
   const Graph: FC = () => {
     const loadGraph = useLoadGraph();
-    const { nodes }: any = useContext(NodesContext);
-    const { edges }: any = useContext(EdgesContext);
-    const { nodeColors }: any = useContext(NodeColorsContext);
+
     const { assign } = useLayoutCircular();
 
     useEffect(() => {
@@ -57,10 +58,10 @@ const LoadGraphWithHook: FC = () => {
     const registerEvents = useRegisterEvents();
     const sigma = useSigma();
     const { edges }: any = useContext(EdgesContext);
-    const { setSelectedNode }: any = useContext(SelectedNodeContext);
+    const { selectedNode, setSelectedNode }: any =
+      useContext(SelectedNodeContext);
     const { setSelectedEdge }: any = useContext(SelectedEdgeContext);
     const setSettings = useSetSettings();
-    const [hoveredNode, setHoveredNode] = useState<string | null>(null);
 
     useEffect(() => {
       registerEvents({
@@ -78,6 +79,10 @@ const LoadGraphWithHook: FC = () => {
         clickNode: (e) => {
           setSelectedNode(e.node);
         },
+        clickStage: (e) => {
+          setSelectedNode('');
+          setSelectedEdge('');
+        },
         clickEdge: (e) => {
           const [node1, node2]: string[] = e.edge.split('->');
           const parallel = edges.filter((edge: any) => {
@@ -90,8 +95,6 @@ const LoadGraphWithHook: FC = () => {
             setSelectedEdge([e.edge]);
           }
         },
-        enterNode: (event) => setHoveredNode(event.node),
-        leaveNode: () => setHoveredNode(null),
       });
     }, [registerEvents, sigma]);
 
@@ -103,31 +106,33 @@ const LoadGraphWithHook: FC = () => {
             ...data,
             highlighted: data.highlighted || false,
           };
-
-          if (hoveredNode) {
-            if (
-              node === hoveredNode ||
-              graph.neighbors(hoveredNode).includes(node)
-            ) {
-              newData.highlighted = true;
-            } else {
-              newData.color = '#E2E2E2';
-              newData.highlighted = false;
+          //Causes errors in console but seems to be working solution to fix a breaking error
+          setTimeout(() => {
+            if (selectedNode != '') {
+              const includes = graph.neighbors(selectedNode).includes(node);
+              if (node === selectedNode || includes) {
+                newData.highlighted = true;
+              } else {
+                newData.color = '#E2E2E2';
+                newData.highlighted = false;
+              }
             }
-          }
+          }, 1);
           return newData;
         },
         edgeReducer: (edge, data) => {
           const graph = sigma.getGraph();
           const newData = { ...data, hidden: false };
-
-          if (hoveredNode && !graph.extremities(edge).includes(hoveredNode)) {
+          if (
+            selectedNode != '' &&
+            !graph.extremities(edge).includes(selectedNode)
+          ) {
             newData.hidden = true;
           }
           return newData;
         },
       });
-    }, [hoveredNode, setSettings, sigma]);
+    }, [selectedNode, nodes, edges, setSettings, sigma]);
 
     return null;
   };

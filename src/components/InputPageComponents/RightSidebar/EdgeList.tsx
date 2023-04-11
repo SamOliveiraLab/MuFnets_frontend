@@ -25,7 +25,9 @@ const EdgeList = () => {
       <Typography variant="h6">Connected Nodes</Typography>
       <div className="connected-edge-list">
         {currentEdges.map(({ target }: any) => {
-          return <Connection edgeName={target} />;
+          return (
+            <Connection key={`${selectedNode}->${target}`} edgeName={target} />
+          );
         })}
       </div>
       <AddEdge />

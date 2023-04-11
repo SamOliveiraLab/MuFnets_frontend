@@ -12,14 +12,16 @@ const NodeInformation = () => {
   const { nodes, setNodes }: any = useContext(NodesContext);
   const { update, setUpdate }: any = useContext(UpdateContext);
   const [nodeInfo, setNodeInfo]: any = useState({
-    height: 0,
+    height: 10,
   });
 
   useEffect(() => {
-    const node = nodes.filter((node: Node) => {
-      return node.name === selectedNode;
-    });
-    setNodeInfo(node[0].settings);
+    if (selectedNode != '') {
+      const node = nodes.filter((node: Node) => {
+        return node.name === selectedNode;
+      });
+      setNodeInfo(node[0].settings);
+    }
   }, [selectedNode]);
 
   return (

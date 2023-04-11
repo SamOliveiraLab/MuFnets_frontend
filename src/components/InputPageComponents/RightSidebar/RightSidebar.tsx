@@ -27,7 +27,7 @@ const RightSidebar = () => {
         ) : null}
       </div>
       <div className="edge-settings">
-        {selectedEdge.length > 0 ? (
+        {selectedEdge?.length > 0 ? (
           <div>
             <EdgeInformation />
           </div>
