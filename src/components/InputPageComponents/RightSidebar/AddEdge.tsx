@@ -8,6 +8,13 @@ import {
   Node,
 } from '../../../pages/HomePage';
 
+/* 
+  Add Edge
+    An input on the right sidebar that allows users to enter the name of another 
+    node in the graph and draw a line from the selected node to that node
+    Currently just an input that is submitted by hitting enter
+*/
+
 const AddEdge = () => {
   const [targetNode, setTargetNode] = useState<string>('');
   const { edges, setEdges }: any = useContext(EdgesContext);
@@ -16,14 +23,17 @@ const AddEdge = () => {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
+    //First check if the target node exists in the graph
     const checkNodeExist = nodes.filter((node: Node) => {
       return node.name === targetNode;
     });
 
     if (checkNodeExist.length != 0) {
+      //Then check if there is an already existing edge that from this source to the target
       const checkDuplicateEdge = edges.filter((edge: Edge) => {
         return edge.name === `${selectedNode}->${targetNode}`;
       });
+
       if (checkDuplicateEdge.length === 0) {
         setEdges([
           ...edges,

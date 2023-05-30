@@ -2,6 +2,11 @@ import { FC } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Navbar.css';
 
+/* 
+  Navbar
+    A navbar used for navigating the website
+*/
+
 const Navbar: FC = () => {
   return (
     <header>

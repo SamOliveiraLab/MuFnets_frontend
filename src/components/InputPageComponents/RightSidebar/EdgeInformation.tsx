@@ -6,6 +6,13 @@ import {
   SelectedEdgeContext,
 } from '../../../pages/HomePage';
 
+/* 
+  Edge Information
+    This is a form that appears when there is an edge selected by the user. 
+    The it displays the current settings of the edge and allows the user
+    to modify the settings.
+*/
+
 const EdgeInformation = () => {
   const { selectedEdge }: any = useContext(SelectedEdgeContext);
   const { edges, setEdges }: any = useContext(EdgesContext);
@@ -25,18 +32,23 @@ const EdgeInformation = () => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     const [source, target]: any = selectedEdge[0].split('->');
+    // First get the edges that do not connect source and target
     const oldEdges = edges.filter((edge: Edge) => {
       return (
         edge.name !== `${source}->${target}` &&
         edge.name !== `${target}->${source}`
       );
     });
+
+    // Get the edges with their old settings
     const newEdges = edges.filter((edge: Edge) => {
       return (
         edge.name === `${source}->${target}` ||
         edge.name === `${target}->${source}`
       );
     });
+
+    // Map old edges with the updated settings
     const updatedSettings = newEdges.map((edge: Edge) => {
       return { ...edge, settings: edgeSettings };
     });

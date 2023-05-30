@@ -7,6 +7,12 @@ import {
 } from '../../../pages/HomePage';
 import { UpdateContext } from '../../../pages/HomePage';
 
+/* 
+  Node Information
+    This is a form that appears only when there is a node is selected
+    Users are able to change the settings by changing and submitting the form
+*/
+
 const NodeInformation = () => {
   const { selectedNode }: any = useContext(SelectedNodeContext);
   const { nodes, setNodes }: any = useContext(NodesContext);

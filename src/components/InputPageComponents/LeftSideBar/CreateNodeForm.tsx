@@ -3,6 +3,14 @@ import { useState, useContext } from 'react';
 import { NodesContext, NodeColorsContext } from '../../../pages/HomePage';
 import { getMyColor } from '../../../scripts.js';
 
+/* 
+  Create Node Form
+    This form is on the left sidebar and is used to create nodes
+    Currently it uses material ui form elements to allow users to create nodes 
+    with a certain name and height
+    It will then set the nodes array in the nodes context
+*/
+
 const CreateNodeForm = () => {
   const [nodeInfo, setNodeInfo] = useState<any>({
     name: '',

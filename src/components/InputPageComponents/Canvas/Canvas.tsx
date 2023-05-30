@@ -20,15 +20,28 @@ import { MultiDirectedGraph } from 'graphology';
 import '@react-sigma/core/lib/react-sigma.min.css';
 import './Canvas.css';
 
+/* 
+  Canvas
+    The canvas is the most crucial component of the input page components as it is where the nodes and edges are being displayed.
+    Most of the code written was taken basically directly from the react sigma documentation, with slight modifications here and
+    there for our specific use case.
+*/
+
+// Function taken from the sigma documentation
 const LoadGraphWithHook: FC = () => {
+  // Importing Context
   const { nodes }: any = useContext(NodesContext);
   const { edges }: any = useContext(EdgesContext);
   const { nodeColors }: any = useContext(NodeColorsContext);
+
+  // Graph component is used to actually render the nodes and edges
   const Graph: FC = () => {
     const loadGraph = useLoadGraph();
-
+    // ERROR HERE: the only layout that seemed to be working for me was Circular, was trying to get
+    // atlas 2 to work but had an error with that
     const { assign } = useLayoutCircular();
 
+    // Creates graph from state on render and update to the graph
     useEffect(() => {
       const graph = new MultiDirectedGraph();
       nodes.forEach(({ name, attributes, settings }: any) => {
@@ -54,6 +67,7 @@ const LoadGraphWithHook: FC = () => {
     return null;
   };
 
+  //This function handles events related to the graph and was taken from react sigma docs
   const GraphEvents: FC = () => {
     const registerEvents = useRegisterEvents();
     const sigma = useSigma();
@@ -63,6 +77,7 @@ const LoadGraphWithHook: FC = () => {
     const { setSelectedEdge }: any = useContext(SelectedEdgeContext);
     const setSettings = useSetSettings();
 
+    // Event listeners
     useEffect(() => {
       registerEvents({
         downNode: (e) => {
@@ -98,28 +113,9 @@ const LoadGraphWithHook: FC = () => {
       });
     }, [registerEvents, sigma]);
 
+    // Code taken from react sigma docs, used to hide edges not related to current selected node
     useEffect(() => {
       setSettings({
-        nodeReducer: (node, data) => {
-          const graph = sigma.getGraph();
-          const newData: any = {
-            ...data,
-            highlighted: data.highlighted || false,
-          };
-          //Causes errors in console but seems to be working solution to fix a breaking error
-          setTimeout(() => {
-            if (selectedNode != '') {
-              const includes = graph.neighbors(selectedNode).includes(node);
-              if (node === selectedNode || includes) {
-                newData.highlighted = true;
-              } else {
-                newData.color = '#E2E2E2';
-                newData.highlighted = false;
-              }
-            }
-          }, 1);
-          return newData;
-        },
         edgeReducer: (edge, data) => {
           const graph = sigma.getGraph();
           const newData = { ...data, hidden: false };

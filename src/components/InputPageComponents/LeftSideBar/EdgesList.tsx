@@ -7,6 +7,12 @@ import {
   NodeColorsContext,
 } from '../../../pages/HomePage';
 
+/* 
+  Edge List
+    The edge list displays the list of all edges formatted source->target
+    Users can click on the edges to set the selected edge
+*/
+
 const EdgeList = () => {
   const { edges }: any = useContext(EdgesContext);
   const { setSelectedEdge }: any = useContext(SelectedEdgeContext);
@@ -25,9 +31,10 @@ const EdgeList = () => {
             className="edges-list-edge"
             color={nodeColors[edge.source]}
             onClick={() => {
-              const [node1, node2]: string[] = edge.name.split('->');
+              const [source, target]: string[] = edge.name.split('->');
+              //We see if there the is a parallel edge so we can set selected edge properly
               const parallel = edges.filter((edge: any) => {
-                return edge.name === `${node2}->${node1}`;
+                return edge.name === `${target}->${source}`;
               });
 
               if (parallel.length == 1) {

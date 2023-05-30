@@ -14,14 +14,17 @@ const UploadButton = () => {
   const { setNodeColors }: any = useContext(NodeColorsContext);
 
   const handleUpload = (e: any) => {
-    //code for reading in input json file
+    // code for reading in input json file
     const reader = new FileReader();
     reader.readAsText(e.target.files[0], 'UTF-8');
     reader.onload = (e: any) => {
-      //Separate Nodes and Edges from the file
+      // Separate Nodes and Edges from the file
+      // The downloaded flag is set if the user downloaded the graph as the
+      // download would be in a different format from the normal uploads
       const { nodes, edges, downloaded }: any = JSON.parse(e.target.result);
 
       if (downloaded) {
+        // getting the node colors that were saved to setNodeColors
         const colors = nodes.reduce((accumulator: any, node: Node) => {
           return {
             ...accumulator,
@@ -33,6 +36,8 @@ const UploadButton = () => {
         setNodes(nodes);
         setEdges(edges);
       } else {
+        // The input was user generated so it will be in a different format
+        // The user input is just a list of nodes and edges in a js object
         const newNodes = nodes.map((node: any) => {
           const color = getMyColor();
           return {

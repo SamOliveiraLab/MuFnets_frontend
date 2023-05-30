@@ -10,6 +10,11 @@ import DeleteNode from './DeleteNode';
 import EdgeInformation from './EdgeInformation';
 import './RightSidebar.css';
 
+/* 
+  Right Sidebar
+    This sidebar is used primarily to view and update the settings of the nodes and edges
+*/
+
 const RightSidebar = () => {
   const { selectedNode }: any = useContext(SelectedNodeContext);
   const { selectedEdge }: any = useContext(SelectedEdgeContext);

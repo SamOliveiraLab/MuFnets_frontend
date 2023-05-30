@@ -8,6 +8,11 @@ import {
   Edge,
 } from '../../../pages/HomePage';
 
+/* 
+  Delete Node
+    Delete Node is a button that is used to delete the current selected node
+*/
+
 const DeleteNode = () => {
   const { nodes, setNodes }: any = useContext(NodesContext);
   const { edges, setEdges }: any = useContext(EdgesContext);

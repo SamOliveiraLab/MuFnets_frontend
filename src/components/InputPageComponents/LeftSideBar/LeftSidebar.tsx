@@ -6,6 +6,11 @@ import CreateNodeForm from './CreateNodeForm';
 import CanvasDownloadButton from './CanvasDownloadButton';
 import './LeftSidebar.css';
 
+/* 
+  Left Sidebar
+    Used to create nodes, compile the graph, upload graphs, view nodes and edges, and download the graph
+*/
+
 const LeftSidebar = () => {
   return (
     <div className="leftsidebar-container">

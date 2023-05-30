@@ -7,6 +7,12 @@ import {
 } from '../../../pages/HomePage';
 import { Typography } from '@mui/material';
 
+/* 
+  Nodes List
+    The node list displays the list of all nodes
+    Users can click on the nodes to set the selected edge
+*/
+
 const NodesList = () => {
   const { nodes }: any = useContext(NodesContext);
   const { setSelectedNode }: any = useContext(SelectedNodeContext);

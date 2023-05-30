@@ -2,6 +2,14 @@ import { Button } from '@mui/material';
 import { NodesContext, EdgesContext } from '../../../pages/HomePage';
 import { useContext } from 'react';
 
+/* 
+  Canvas Download Button
+    This component is used to download the current 
+    state of the canvas so users are able to save the
+    current graph and load it using the upload button
+    in the future
+*/
+
 const DownloadButton = () => {
   const { nodes }: any = useContext(NodesContext);
   const { edges }: any = useContext(EdgesContext);
