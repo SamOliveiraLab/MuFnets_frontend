@@ -1,5 +1,5 @@
 import OutputDownloadButton from '../components/OutputPageComponents/OutputDownloadButton';
-import OutputDisplay from '../components/OutputPageComponents/OutputDisplay/OutputDisplay';
+import OutputDisplay from '../components/OutputPageComponents/OutputDisplay/VictoryOutputDisplay';
 import { createRef } from 'react';
 import VictoryOutputDisplay from '../components/OutputPageComponents/OutputDisplay/VictoryOutputDisplay';
 

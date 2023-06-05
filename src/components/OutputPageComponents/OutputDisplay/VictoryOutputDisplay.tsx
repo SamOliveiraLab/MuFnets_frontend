@@ -20,6 +20,7 @@ const VictoryOutputDisplay = () => {
   useEffect(() => {
     if (output != '') {
       const { predArray, topoOrder, orderedAdj, endpoints, unfolded } = output;
+      console.log(output);
       //nodeToNumber will map each node to a numerical x value that will be used to determine the axis as well as for mapping the custom svgs based on length
       let correctOrder = topoOrder.reverse();
       let mcList = {};

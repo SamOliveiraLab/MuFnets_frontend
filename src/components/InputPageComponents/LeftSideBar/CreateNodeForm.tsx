@@ -19,57 +19,52 @@ const CreateNodeForm = () => {
   const { nodes, setNodes }: any = useContext(NodesContext);
   const { nodeColors, setNodeColors }: any = useContext(NodeColorsContext);
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const color = getMyColor();
+
+    setNodes([
+      ...nodes,
+      {
+        name: nodeInfo.name,
+        attributes: {
+          x: 0,
+          y: 0,
+          label: nodeInfo.name,
+          color: color,
+        },
+        settings: {
+          height: nodeInfo.height,
+        },
+      },
+    ]);
+
+    setNodeColors({ ...nodeColors, [nodeInfo.name]: color });
+    setNodeInfo({
+      name: '',
+      height: 10,
+    });
+  };
+
   return (
-    <form
-      className="leftsidebar-form"
-      onSubmit={(e) => {
-        e.preventDefault();
-        const color = getMyColor();
-
-        setNodes([
-          ...nodes,
-          {
-            name: nodeInfo.name,
-            attributes: {
-              x: 0,
-              y: 0,
-              label: `${nodeInfo.name}`,
-              color: color,
-            },
-            settings: {
-              height: nodeInfo.height,
-            },
-          },
-        ]);
-
-        setNodeColors({ ...nodeColors, [nodeInfo.name]: color });
-        setNodeInfo({
-          name: '',
-          height: 10,
-        });
-      }}
-    >
-      <Typography style={{ fontSize: 25, fontWeight: 'bold' }}>
+    <form className="leftsidebar-form" onSubmit={handleSubmit}>
+      <Typography variant="h6" style={{ fontWeight: 'bold' }}>
         Create Node
       </Typography>
       <TextField
         variant="outlined"
-        placeholder="Enter Node Name:"
+        placeholder="Enter Node Name"
         value={nodeInfo.name}
-        onChange={(e) => {
-          setNodeInfo((prev: any) => {
-            return { ...prev, name: e.target.value };
-          });
-        }}
+        onChange={(e) => setNodeInfo({ ...nodeInfo, name: e.target.value })}
+        fullWidth
+        margin="normal"
       />
-      <Typography variant="h6">Height:</Typography>
+      <Typography variant="subtitle1">Height:</Typography>
       <Select
         value={nodeInfo.height}
-        onChange={(e) => {
-          setNodeInfo((prev: any) => {
-            return { ...prev, height: e.target.value };
-          });
-        }}
+        onChange={(e) => setNodeInfo({ ...nodeInfo, height: e.target.value })}
+        fullWidth
+        margin="normal"
       >
         <MenuItem value={10}>0</MenuItem>
         <MenuItem value={15}>1</MenuItem>
@@ -80,9 +75,9 @@ const CreateNodeForm = () => {
         variant="contained"
         color="secondary"
         type="submit"
-        disabled={nodeInfo.name === '' ? true : false}
-        className="create-button"
-        style={{ width: '100%', borderRadius: 30, fontSize: '.85rem' }}
+        disabled={nodeInfo.name === ''}
+        fullWidth
+        style={{ borderRadius: 30, marginTop: 16 }}
       >
         Create
       </Button>
