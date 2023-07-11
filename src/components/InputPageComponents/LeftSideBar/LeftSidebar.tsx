@@ -4,12 +4,8 @@ import EdgesList from './EdgesList';
 import NodesList from './NodesList';
 import CreateNodeForm from './CreateNodeForm';
 import CanvasDownloadButton from './CanvasDownloadButton';
+import ClearNodesButton from './ClearNodesButton'; 
 import './LeftSidebar.css';
-
-/* 
-  Left Sidebar
-    Used to create nodes, compile the graph, upload graphs, view nodes and edges, and download the graph
-*/
 
 const LeftSidebar = () => {
   return (
@@ -23,6 +19,7 @@ const LeftSidebar = () => {
         <UploadButton />
         <CompileButton />
         <CanvasDownloadButton />
+        <ClearNodesButton /> 
       </div>
     </div>
   );

@@ -16,6 +16,8 @@ const MFM = (props: any) => {
   const x2 = getPoints()[1].x;
   const y1 = getPoints()[0].y;
   const y2 = getPoints()[1].y;
+  const rectWidth = 20;  // specify width of rectangle
+  const rectHeight = 20;  // specify height of rectangle
 
   return (
     <svg>
@@ -38,8 +40,15 @@ const MFM = (props: any) => {
         y1={y1}
         x2={x2 - 10}
         y2={y2}
-        stroke="red"
+        stroke="beige"
         strokeWidth={20}
+      />
+      <rect  // rectangle element
+        x={(x1 + x2) / 2 - rectWidth / 2}  // centered at midpoint
+        y={y1 - rectHeight / 2}  // centered vertically
+        width={rectWidth}
+        height={rectHeight}
+        fill="gray"  // change color as needed
       />
       <foreignObject x={x1 + 10} y={y1 - 10} width={x2 - x1} height={50}>
         <div

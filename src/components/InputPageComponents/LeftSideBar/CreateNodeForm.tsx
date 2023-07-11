@@ -63,8 +63,6 @@ const CreateNodeForm = () => {
       <Select
         value={nodeInfo.height}
         onChange={(e) => setNodeInfo({ ...nodeInfo, height: e.target.value })}
-        fullWidth
-        margin="normal"
       >
         <MenuItem value={10}>0</MenuItem>
         <MenuItem value={15}>1</MenuItem>

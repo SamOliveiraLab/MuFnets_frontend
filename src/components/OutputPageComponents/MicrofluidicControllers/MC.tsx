@@ -1,8 +1,7 @@
 import React from 'react';
-import { VictoryLineProps } from 'victory';
 
 const MC = (props: any) => {
-  const { scale, data, source, target } = props;
+  const { scale, data, nodes } = props;
 
   //data is passed in as x and y coordinates
   //to allow for the svg to draw properly, we have use the provided scale function
@@ -13,9 +12,7 @@ const MC = (props: any) => {
   };
 
   const x1 = getPoints()[0].x;
-  const x2 = getPoints()[1].x;
   const y1 = getPoints()[0].y;
-  const y2 = getPoints()[1].y;
 
   return (
     <svg>
@@ -37,9 +34,7 @@ const MC = (props: any) => {
             alignItems: 'center',
           }}
         >
-          <p style={{ marginLeft: 5, fontSize: 10 }}>
-            {source}/{target}
-          </p>
+          <p style={{ marginLeft: 5, fontSize: 10 }}>{nodes}</p>
         </div>
       </foreignObject>
     </svg>
