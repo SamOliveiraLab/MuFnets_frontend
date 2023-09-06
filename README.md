@@ -48,3 +48,4 @@ Here is a list of major components:
 - React + Typescript: building the UI
 - React Sigma + SigmaJS + Graphology: creating the graphical representation on the canvas
 - CSS + Material UI: styling components
+- Javascript: Algorithm/Backend
