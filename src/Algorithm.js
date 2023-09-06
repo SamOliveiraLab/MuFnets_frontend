@@ -1,277 +1,135 @@
-export function algorithm(root, nodes, adjList) {
-  let PI = {};
-  let topoSorted = {};
-  let ordered = {};
-
-  if (adjList == null) {
-    return null;
+export class Node {
+  constructor(name) {
+      this.name = name;
+      this.neighbors = [];
   }
 
-  // 1 Populate predecessor array
-  for (let i = 0; i < adjList.length; i++) {
-    const temp = adjList[i].split(':');
-    const src = temp[0];
-    const dest = temp[2];
-
-    let numType = null;
-    if (temp[1] === 'C') {
-      numType = 0;
-    } else if (temp[1] === 'S') {
-      numType = 1;
-    } else if (temp[1] === 'L') {
-      numType = 2;
-    }
-
-    if (PI[src] === undefined) {
-      PI[src] = [null, null, 0];
-    }
-    PI[dest] = [src, temp[1], 0];
+  addNeighbor(node) {
+      this.neighbors.push(node);
   }
 
-  // 2 Determine if MST connects to all nodes (no need to check for cycles for MST)
-  const mst = MinimumSpanningTree(root, adjList);
+  dfs(visitedSet = new Set()) {
+    if (visitedSet.has(this.name)) return;
 
-  // 3 Run Topological Sort & Adjecency List Algorithms
-  topoSorted = TopologicalSort(PI);
-  const parsedAdjList = CreateSortedAdjList(PI);
-
-  // 4 Get completed mapping
-  const temp_topoSorted = [...topoSorted];
-  while (temp_topoSorted.length > 0) {
-    const temp = temp_topoSorted.pop();
-    if (ordered[temp] === undefined) {
-      ShortestBranch(parsedAdjList, temp, 0, ordered);
+    console.log(this.name);
+    visitedSet.add(this.name);
+    
+    for (let neighbor of this.neighbors) {
+        neighbor.dfs(visitedSet);
     }
   }
-  Optimize(ordered);
 
-  // 5 Unfold completed mapping
-  const [endpoints, unfolded] = PostProcess(root, ordered, topoSorted);
+  // Cycle detection using DFS
+  containsCycle(visitedSet = new Set(), recStack = new Set()) {
+    if (recStack.has(this.name)) return true;
 
-  // 6 identify devices
-  // 7 Return values
-  console.log('predecessor array\t', PI);
-  console.log('topological sorted\t', topoSorted);
-  console.log('ordered adj list \t', ordered);
-  console.log('endpoints \t\t', endpoints);
-  console.log('unfolded adj list\t', unfolded);
-  return [PI, topoSorted.slice(-1), ordered, endpoints, unfolded];
-}
+    if (visitedSet.has(this.name)) return false;
 
-function MinimumSpanningTree(root, str_adjList) {
-  let kv_adjList = {};
-
-  // Parse adjlist
-  for (let edge of str_adjList) {
-    let temp = edge.split(':');
-    let src = temp[0];
-    let t = temp[1];
-    let dest = temp[2];
-
-    if (kv_adjList[src] == null) {
-      kv_adjList[src] = [];
-    }
-
-    kv_adjList[src].push([dest, t, 0]);
-  }
-
-  // Run BFS
-  let Q = [root];
-  let minSpanningTree = [];
-  let visited = [];
-  let edges = [];
-
-  // while the Queue is not empty
-  while (Q.length > 0) {
-    // pop the first element
-    let parent = Q.shift();
-
-    if (kv_adjList[parent] == null) {
-      continue;
-    }
-
-    let children = kv_adjList[parent];
-
-    // enqueue each child from parent node into the queue
-    while (children.length > 0) {
-      let [child, t, _] = children.shift();
-      if (!visited.includes(child) && !Q.includes(child)) {
-        Q.push(child);
-
-        if (
-          !edges.includes([parent, child]) &&
-          !edges.includes([child, parent])
-        ) {
-          edges.push([parent, child]);
-          minSpanningTree.push(`${parent}:${t}:${child}:0`);
+    visitedSet.add(this.name);
+    recStack.add(this.name);
+    
+    for (let neighbor of this.neighbors) {
+        if (neighbor.containsCycle(visitedSet, recStack)) {
+            return true;
         }
-      }
     }
 
-    // mark parent as visited, then repeat until Queue is empty
-    visited.push(parent);
-  }
-
-  return minSpanningTree;
+    recStack.delete(this.name);
+    return false;
 }
 
-function TopologicalSort(PI) {
-  let stack = [];
-  for (let k in PI) {
-    let a = k;
-    while (a != null) {
-      if (stack.includes(a)) {
-        stack.splice(stack.indexOf(a), 1);
+}
+
+export class Graph {
+  constructor() {
+      this.nodes = {};
+  }
+
+  addNode(nodeName) {
+      if (!this.nodes[nodeName]) {
+          this.nodes[nodeName] = new Node(nodeName);
       }
-      stack.push(a);
-      let [child] = PI[a];
-      a = child;
-    }
-  }
-  return stack;
-}
-
-function CreateSortedAdjList(PI) {
-  let newAdjList = {};
-  for (let child in PI) {
-    let [parent] = PI[child];
-    if (parent != null) {
-      if (newAdjList[parent] == null) {
-        newAdjList[parent] = [];
-      }
-      newAdjList[parent].push(child);
-    }
-  }
-  return newAdjList;
-}
-
-function ShortestBranch(network, src, distance, ordered) {
-  let d = distance;
-  if (network[src] == null) {
-    return distance;
-  } else {
-    while (network[src].length > 0) {
-      let nextSrc = network[src].shift();
-      d = ShortestBranch(network, nextSrc, distance + 1, ordered);
-      if (ordered[src] == null) {
-        ordered[src] = [];
-      }
-      ordered[src].push([d - distance, nextSrc]);
-    }
-    return d;
-  }
-}
-
-function Optimize(ordered) {
-  for (let key in ordered) {
-    ordered[key].sort();
-  }
-}
-
-function printInfo(self) {
-  console.log(`predecessor:\t\t${self.PI}`);
-  console.log(`topological sort:\t${self.topoSorted}`);
-  console.log(`complete adj list:\t${self.ordered}`);
-}
-
-function PostProcess(root, cellInfo, cellIndex) {
-  // getting end points
-  // Format {"A":[(1,"B"),(2,"C")], "B":[(1,"D"),(2,"E")]}
-
-  function updateChildren(key, parentIdx, cellInfo) {
-    if (cellInfo[key] != undefined) {
-      let childrenList = cellInfo[key];
-      let newChildrenList = [];
-
-      // console.log(key, cellInfo);
-
-      for (let i = 0; i < childrenList.length; i++) {
-        let offset = childrenList[i][0];
-        let child = childrenList[i][1];
-        newChildrenList.push([offset + parentIdx, child]);
-      }
-
-      cellInfo[key] = newChildrenList;
-
-      console.log(newChildrenList);
-      let offset = Math.max(newChildrenList);
-      while (childrenList.length) {
-        let [childIdx, newChild] = childrenList.shift();
-        updateChildren(newChild, offset, cellInfo);
-      }
-    }
+      return this.nodes[nodeName];
   }
 
-  function getEndPoints(key, endpoints, cellInfo) {
-    if (cellInfo[key] != undefined) {
-      let extent = Math.max(cellInfo[key]);
-      endpoints[key] = extent;
+  addEdge(nodeName1, nodeName2) {
+      let node1 = this.addNode(nodeName1);
+      let node2 = this.addNode(nodeName2);
+      node1.addNeighbor(node2);
+  }
 
-      // console.log(key, extent);
-      let cpy = cellInfo[key].slice();
-      while (cpy.length) {
-        let [row, child] = cpy.shift();
+  bfs(startNodeName) {
+    if (!this.nodes[startNodeName]) return;
 
-        if (cellInfo[child] == undefined) {
-          endpoints[child] = row;
+    let queue = [this.nodes[startNodeName]];
+    let visitedSet = new Set();
+
+    while (queue.length > 0) {
+        let currentNode = queue.shift();
+
+        if (!visitedSet.has(currentNode.name)) {
+            console.log(currentNode.name);
+            visitedSet.add(currentNode.name);
+
+            for (let neighbor of currentNode.neighbors) {
+                queue.push(neighbor);
+            }
         }
-
-        endpoints = getEndPoints(child, endpoints, cellInfo);
-      }
     }
-
-    return endpoints;
   }
 
-  function unfoldAdjList(adjList) {
-    // Format {"A":[(1,"B"),(2,"C")], "B":[(3,"D"),(4,"E")]}
-    // to  unfolded = [[A, B], [A, C], [B, D], [B, E]]
-    //
-    // then just do a simple: if cell in unfolded[row] {}
+  shortestPath(startNodeName, endNodeName) {
+    if (!this.nodes[startNodeName] || !this.nodes[endNodeName]) return [];
 
-    let unfoldedList = {};
-    let keys = Object.keys(adjList);
+    let visitedSet = new Set();
+    let queue = [{node: this.nodes[startNodeName], path: [startNodeName]}];
 
-    for (let i = 0; i < keys.length; i++) {
-      let key = keys[i];
-      for (let j = 0; j < adjList[key].length; j++) {
-        let row = adjList[key][j][0];
-        let child = adjList[key][j][1];
-        if (unfoldedList[row] == undefined) {
-          unfoldedList[row] = [];
+    while (queue.length > 0) {
+        let currentObj = queue.shift();
+        let currentNode = currentObj.node;
+        let currentPath = currentObj.path;
+
+        if (currentNode.name === endNodeName) return currentPath;
+
+        if (!visitedSet.has(currentNode.name)) {
+            visitedSet.add(currentNode.name);
+
+            for (let neighbor of currentNode.neighbors) {
+                if (!visitedSet.has(neighbor.name)) {
+                    queue.push({node: neighbor, path: [...currentPath, neighbor.name]});
+                }
+            }
         }
-        unfoldedList[row].push(key);
-        unfoldedList[row].push(child);
-      }
     }
 
-    return unfoldedList;
+    return [];  // If no path found
   }
-  // console.log(Math.max([[1,"P"],[9,"d"]]));
-
-  // console.log("heap", cellInfo);
-  updateChildren(root, 0, cellInfo);
-  // console.log("heap", cellInfo);
-
-  let endpoints = getEndPoints(root, {}, cellInfo);
-  // console.log("endpoint", endpoints);
-  let unfolded = unfoldAdjList(cellInfo);
-  // console.log("unfolded list", unfolded);
-
-  return [endpoints, unfolded];
 }
 
-const edges = [
-  'c1:L:v1:1',
-  'c1:L:co1:1',
-  'c3:L:co2:1',
-  'c3:L:co1:1',
-  'v1:L:c3:1',
-  'v1:L:c2:1',
-  'v2:L:c2:1',
-  'v2:L:c3:1',
-  'co1:L:c2:1',
-  'co2:L:c1:1',
-];
-const nodes = ['c1', 'c2', 'c3', 'v1', 'v2', 'co1', 'co2'];
-console.log(algorithm('c1', nodes, edges));
+export function threeIntSum(nums, target) {
+  nums.sort((a, b) => a - b);
+  let closest = Infinity;
+
+  for (let i = 0; i < nums.length - 2; i++) {
+      let left = i + 1;
+      let right = nums.length - 1;
+
+      while (left < right) {
+          let total = nums[i] + nums[left] + nums[right];
+
+          if (Math.abs(target - closest) > Math.abs(target - total)) {
+              closest = total;
+          }
+
+          if (total < target) {
+              left++;
+          } else {
+              right--;
+          }
+      }
+  }
+
+  return closest;
+}
+
+

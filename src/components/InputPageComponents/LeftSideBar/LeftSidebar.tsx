@@ -4,7 +4,6 @@ import EdgesList from './EdgesList';
 import NodesList from './NodesList';
 import CreateNodeForm from './CreateNodeForm';
 import CanvasDownloadButton from './CanvasDownloadButton';
-import ClearNodesButton from './ClearNodesButton'; 
 import './LeftSidebar.css';
 
 const LeftSidebar = () => {
@@ -19,7 +18,6 @@ const LeftSidebar = () => {
         <UploadButton />
         <CompileButton />
         <CanvasDownloadButton />
-        <ClearNodesButton /> 
       </div>
     </div>
   );
