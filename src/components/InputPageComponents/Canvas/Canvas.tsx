@@ -19,6 +19,7 @@ import { useLayoutCircular } from '@react-sigma/layout-circular';
 import { MultiDirectedGraph } from 'graphology';
 import '@react-sigma/core/lib/react-sigma.min.css';
 import './Canvas.css';
+import NodeModal from "../NodeModal/NodeModal";
 
 /* 
   Canvas
@@ -34,21 +35,47 @@ const LoadGraphWithHook: FC = () => {
   const { edges }: any = useContext(EdgesContext);
   const { nodeColors }: any = useContext(NodeColorsContext);
 
+  const [showNodeModal, setShowNodeModal] = useState(false);
+  const [currentNode, setCurrentNode] = useState<{
+    id: string;
+    data: any;
+  } | null>(null);
+
+  // Add handler for saving node data
+  const handleSaveNode = (nodeId: string, data: any) => {
+    // Here you would update your nodes state with the new data
+    // This depends on how you're managing state in your app
+    console.log(`Saving data for node ${nodeId}:`, data);
+    // You might need to update your NodesContext here
+  };
+
   // Graph component is used to actually render the nodes and edges
   const Graph: FC = () => {
     const loadGraph = useLoadGraph();
     // ERROR HERE: the only layout that seemed to be working for me was Circular, was trying to get
     // atlas 2 to work but had an error with that
+
+    const sigma = useSigma();
+
     const { assign } = useLayoutCircular();
 
     // Creates graph from state on render and update to the graph
     useEffect(() => {
       const graph = new MultiDirectedGraph();
+      const existingGraph = sigma?.getGraph?.();
+
       nodes.forEach(({ name, attributes, settings }: any) => {
+
+        const existingAttributes = existingGraph?.hasNode(name)
+          ? existingGraph.getNodeAttributes(name)
+          : {};
+
         const nodeAttributes = {
           size: settings.height,
           color: attributes.color,
           ...attributes,
+          x: existingAttributes.x ?? Math.random(),
+          y: existingAttributes.y ?? Math.random(),
         };
         graph.addNode(name, nodeAttributes);
       });
@@ -61,8 +88,8 @@ const LoadGraphWithHook: FC = () => {
       });
 
       loadGraph(graph);
-      assign();
-    }, [assign, loadGraph]);
+      // assign();
+    }, [ nodes,edges,nodeColors,loadGraph]);
 
     return null;
   };
@@ -71,6 +98,7 @@ const LoadGraphWithHook: FC = () => {
   const GraphEvents: FC = () => {
     const registerEvents = useRegisterEvents();
     const sigma = useSigma();
+    const [draggedNode, setDraggedNode] = useState<string | null>(null);
     const { edges }: any = useContext(EdgesContext);
     const { selectedNode, setSelectedNode }: any =
       useContext(SelectedNodeContext);
@@ -79,27 +107,78 @@ const LoadGraphWithHook: FC = () => {
 
     // Event listeners
     useEffect(() => {
-      registerEvents({
-        downNode: (e) => {
-          sigma.getGraph().setNodeAttribute(e.node, 'highlighted', true);
-        },
-        mousedown: (e) => {
-          // Disable the autoscale at the first down interaction
-          if (!sigma.getCustomBBox()) sigma.setCustomBBox(sigma.getBBox());
-        },
-        touchdown: (e) => {
-          // Disable the autoscale at the first down interaction
-          if (!sigma.getCustomBBox()) sigma.setCustomBBox(sigma.getBBox());
-        },
-        clickNode: (e) => {
+      let didDrag = false;
+      let clickTimeout: ReturnType<typeof setTimeout> | null = null;
+
+      const handleClickNode = (e: any) => {
+        if (didDrag) return;
+        clickTimeout = setTimeout(() => {
           setSelectedNode(e.node);
+          clickTimeout = null;
+        }, 200);
+      };
+
+      const handleDoubleClickNode = (e: any) => {
+        if (clickTimeout) {
+          clearTimeout(clickTimeout);
+          clickTimeout = null;
+        }
+
+        e.preventSigmaDefault?.();
+        e.original?.preventDefault?.();
+        e.original?.stopPropagation?.();
+
+        const nodeId = e.node;
+        const nodeData = sigma.getGraph().getNodeAttributes(nodeId);
+        setCurrentNode({ id: nodeId, data: nodeData });
+        setShowNodeModal(true);
+      };
+
+      registerEvents({
+        clickNode: handleClickNode,
+        doubleClickNode: handleDoubleClickNode,
+        downNode: (e) => {
+          didDrag = false;
+          setDraggedNode(e.node);
+          sigma.getGraph().setNodeAttribute(e.node, "highlighted", true);
         },
+        // On mouse move, if the drag mode is enabled, we change the position of the draggedNode
+        mousemovebody: (e) => {
+          if (!draggedNode) return;
+
+          didDrag = true;
+          // Get new position of node
+          const pos = sigma.viewportToGraph(e);
+          sigma.getGraph().setNodeAttribute(draggedNode, "x", pos.x);
+          sigma.getGraph().setNodeAttribute(draggedNode, "y", pos.y);
+
+          // Prevent sigma to move camera:
+          e.preventSigmaDefault();
+          e.original.preventDefault();
+          e.original.stopPropagation();
+        },
+        // On mouse up, we reset the autoscale and the dragging mode
+        mouseup: () => {
+          if (draggedNode) {
+            setDraggedNode(null);
+            sigma.getGraph().removeNodeAttribute(draggedNode, "highlighted");
+          }
+        },
+        // Disable the autoscale at the first down interaction
+        mousedown: () => {
+          if (!sigma.getCustomBBox()) sigma.setCustomBBox(sigma.getBBox());
+        },
+        // clickNode: (e) => {
+        //   if (didDrag) return;
+        //   setSelectedNode(e.node);
+        // },
         clickStage: (e) => {
-          setSelectedNode('');
-          setSelectedEdge('');
+          setSelectedNode("");
+          setSelectedEdge("");
         },
         clickEdge: (e) => {
-          const [node1, node2]: string[] = e.edge.split('->');
+          if (didDrag) return;
+          const [node1, node2]: string[] = e.edge.split("->");
           const parallel = edges.filter((edge: any) => {
             return edge.name === `${node2}->${node1}`;
           });
@@ -111,16 +190,20 @@ const LoadGraphWithHook: FC = () => {
           }
         },
       });
-    }, [registerEvents, sigma]);
 
-    // Code taken from react sigma docs, used to hide edges not related to current selected node
+      return () => {
+        if (clickTimeout) clearTimeout(clickTimeout);
+      };
+    }, [registerEvents, sigma, draggedNode, edges]);
+
+    //Code taken from react sigma docs, used to hide edges not related to current selected node
     useEffect(() => {
       setSettings({
         edgeReducer: (edge, data) => {
           const graph = sigma.getGraph();
           const newData = { ...data, hidden: false };
           if (
-            selectedNode != '' &&
+            selectedNode != "" &&
             !graph.extremities(edge).includes(selectedNode)
           ) {
             newData.hidden = true;
@@ -137,16 +220,27 @@ const LoadGraphWithHook: FC = () => {
     <div className="canvas-container">
       <SigmaContainer
         settings={{
-          defaultEdgeType: 'arrow',
-          defaultEdgeColor: 'black',
+          defaultEdgeType: "arrow",
+          defaultEdgeColor: "black",
+          allowInvalidContainer: true,
         }}
       >
         <Graph />
         <GraphEvents />
-        <ControlsContainer position={'bottom-right'}>
+        <ControlsContainer position={"bottom-right"}>
           <ZoomControl />
         </ControlsContainer>
       </SigmaContainer>
+
+      {/* Add the modal to your render output */}
+      {showNodeModal && currentNode && (
+        <NodeModal
+          nodeId={currentNode.id}
+          nodeData={currentNode.data}
+          onClose={() => setShowNodeModal(false)}
+          onSave={handleSaveNode}
+        />
+      )}
     </div>
   );
 };
