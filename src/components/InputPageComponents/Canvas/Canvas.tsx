@@ -1,11 +1,11 @@
-import { FC, useContext, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useState } from "react";
 import {
   EdgesContext,
   NodesContext,
   SelectedNodeContext,
   SelectedEdgeContext,
   NodeColorsContext,
-} from '../../../pages/HomePage';
+} from "../../../pages/HomePage";
 import {
   SigmaContainer,
   useLoadGraph,
@@ -14,11 +14,11 @@ import {
   ControlsContainer,
   ZoomControl,
   useSetSettings,
-} from '@react-sigma/core';
-import { useLayoutCircular } from '@react-sigma/layout-circular';
-import { MultiDirectedGraph } from 'graphology';
-import '@react-sigma/core/lib/react-sigma.min.css';
-import './Canvas.css';
+} from "@react-sigma/core";
+import { useLayoutCircular } from "@react-sigma/layout-circular";
+import { MultiDirectedGraph } from "graphology";
+import "@react-sigma/core/lib/react-sigma.min.css";
+import "./Canvas.css";
 import NodeModal from "../NodeModal/NodeModal";
 
 /* 
@@ -65,7 +65,6 @@ const LoadGraphWithHook: FC = () => {
       const existingGraph = sigma?.getGraph?.();
 
       nodes.forEach(({ name, attributes, settings }: any) => {
-
         const existingAttributes = existingGraph?.hasNode(name)
           ? existingGraph.getNodeAttributes(name)
           : {};
@@ -89,7 +88,7 @@ const LoadGraphWithHook: FC = () => {
 
       loadGraph(graph);
       // assign();
-    }, [ nodes,edges,nodeColors,loadGraph]);
+    }, [nodes, edges, nodeColors, loadGraph]);
 
     return null;
   };
@@ -99,7 +98,12 @@ const LoadGraphWithHook: FC = () => {
     const registerEvents = useRegisterEvents();
     const sigma = useSigma();
     const [draggedNode, setDraggedNode] = useState<string | null>(null);
-    const { edges }: any = useContext(EdgesContext);
+    const [isDrawingEdge, setIsDrawingEdge] = useState(false);
+    const [edgeStartNode, setEdgeStartNode] = useState<string | null>(null);
+    const [cursorPos, setCursorPos] = useState<{ x: number; y: number } | null>(
+      null
+    );
+    const { edges, setEdges }: any = useContext(EdgesContext);
     const { selectedNode, setSelectedNode }: any =
       useContext(SelectedNodeContext);
     const { setSelectedEdge }: any = useContext(SelectedEdgeContext);
@@ -112,7 +116,26 @@ const LoadGraphWithHook: FC = () => {
 
       const handleClickNode = (e: any) => {
         if (didDrag) return;
+
+        if (clickTimeout) clearTimeout(clickTimeout);
         clickTimeout = setTimeout(() => {
+          if (isDrawingEdge && edgeStartNode && edgeStartNode !== e.node) {
+            // Finish drawing the edge
+            const newEdge = {
+              name: `${edgeStartNode}->${e.node}`,
+              source: edgeStartNode,
+              target: e.node,
+            };
+
+            setEdges((prev: any[]) => [...prev, newEdge]);
+            setIsDrawingEdge(false);
+            setEdgeStartNode(null);
+            setCursorPos(null);
+          } else {
+            // Begin edge drawing
+            setIsDrawingEdge(true);
+            setEdgeStartNode(e.node);
+          }
           setSelectedNode(e.node);
           clickTimeout = null;
         }, 200);
@@ -144,18 +167,18 @@ const LoadGraphWithHook: FC = () => {
         },
         // On mouse move, if the drag mode is enabled, we change the position of the draggedNode
         mousemovebody: (e) => {
-          if (!draggedNode) return;
-
-          didDrag = true;
-          // Get new position of node
-          const pos = sigma.viewportToGraph(e);
-          sigma.getGraph().setNodeAttribute(draggedNode, "x", pos.x);
-          sigma.getGraph().setNodeAttribute(draggedNode, "y", pos.y);
-
-          // Prevent sigma to move camera:
-          e.preventSigmaDefault();
-          e.original.preventDefault();
-          e.original.stopPropagation();
+          if (draggedNode) {
+            didDrag = true;
+            const pos = sigma.viewportToGraph(e);
+            sigma.getGraph().setNodeAttribute(draggedNode, "x", pos.x);
+            sigma.getGraph().setNodeAttribute(draggedNode, "y", pos.y);
+            e.preventSigmaDefault();
+            e.original.preventDefault();
+            e.original.stopPropagation();
+          } else if (isDrawingEdge) {
+            const pos = sigma.viewportToGraph(e);
+            setCursorPos({ x: pos.x, y: pos.y });
+          }
         },
         // On mouse up, we reset the autoscale and the dragging mode
         mouseup: () => {
@@ -172,10 +195,17 @@ const LoadGraphWithHook: FC = () => {
         //   if (didDrag) return;
         //   setSelectedNode(e.node);
         // },
-        clickStage: (e) => {
-          setSelectedNode("");
-          setSelectedEdge("");
+        clickStage: () => {
+          if (isDrawingEdge) {
+            setIsDrawingEdge(false);
+            setEdgeStartNode(null);
+            setCursorPos(null);
+          } else {
+            setSelectedNode("");
+            setSelectedEdge("");
+          }
         },
+
         clickEdge: (e) => {
           if (didDrag) return;
           const [node1, node2]: string[] = e.edge.split("->");
@@ -191,10 +221,26 @@ const LoadGraphWithHook: FC = () => {
         },
       });
 
+      const handleEscKey = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          setIsDrawingEdge(false);
+          setEdgeStartNode(null);
+          setCursorPos(null);
+        }
+      };
+
+      window.addEventListener("keydown", handleEscKey);
       return () => {
         if (clickTimeout) clearTimeout(clickTimeout);
       };
-    }, [registerEvents, sigma, draggedNode, edges]);
+    }, [
+      registerEvents,
+      sigma,
+      draggedNode,
+      edges,
+      isDrawingEdge,
+      edgeStartNode,
+    ]);
 
     //Code taken from react sigma docs, used to hide edges not related to current selected node
     useEffect(() => {

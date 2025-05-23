@@ -17,6 +17,7 @@
     "@react-sigma/layout-core": "^3.4.0",
     "@react-sigma/layout-force": "^3.4.0",
     "axios": "^1.3.3",
+    "firebase": "^11.8.1",
     "graphology": "^0.25.1",
     "graphology-layout": "^0.6.1",
     "graphology-layout-force": "^0.2.4",
