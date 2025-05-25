@@ -28,9 +28,26 @@ const NodeModal: FC<NodeModalProps> = ({
 
   const handleSave = async () => {
     try {
-      await setDoc(doc(db, "nodes", nodeId), formData); // Save formData under document ID = nodeId
-      onSave(nodeId, formData); // Optional callback
-      onClose();
+      const cleanedData = {
+        ...formData,
+        inputConnections: formData.inputConnections
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+        outputConnections: formData.outputConnections
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+        perturbations: formData.perturbations
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+      };
+
+      await setDoc(doc(db, "nodes", nodeId), cleanedData);
+      onSave(nodeId, cleanedData);
+      setNodeDataSheet(cleanedData);
+      setIsEditing(false);
     } catch (error) {
       console.error("Error saving node data:", error);
     }
@@ -38,20 +55,32 @@ const NodeModal: FC<NodeModalProps> = ({
 
   const [nodeDataSheet, setNodeDataSheet] = useState<any | null>(null);
 
-  
+  const [isEditing, setIsEditing] = useState(nodeDataSheet ? false : true);
+
 
   useEffect(() => {
     const fetchNodeData = async () => {
       const docRef = doc(db, "nodes", nodeId);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        setNodeDataSheet(docSnap.data());
+        const data = docSnap.data();
+        setNodeDataSheet(data);
+        setFormData({
+          specie: data.specie || "",
+          flowBehavior: data.flowBehavior || "",
+          inputConnections: (data.inputConnections || []).join(", "),
+          outputConnections: (data.outputConnections || []).join(", "),
+          perturbations: (data.perturbations || []).join(", "),
+        });
+        setIsEditing(false); // Start in view mode
       } else {
         setNodeDataSheet(null);
+        setIsEditing(true); // No data yet, go to edit mode
       }
     };
     fetchNodeData();
   }, [nodeId]);
+
 
 
   
@@ -63,15 +92,7 @@ const NodeModal: FC<NodeModalProps> = ({
 
         {/* //check if details exist */}
 
-        {nodeDataSheet ? (
-          <div>
-            <p>Specie:{nodeDataSheet.specie}</p>
-            <p>Flow Behavior:{nodeDataSheet.flowBehavior}</p>
-            <p>Input Connections:{nodeDataSheet.inputConnections}</p>
-            <p>Output Connections:{nodeDataSheet.outputConnections}</p>
-            <p>Perturbations:{nodeDataSheet.perturbations}</p>
-          </div>
-        ) : (
+        {isEditing ? (
           <>
             <div className="form-section">
               <label>Specie:</label>
@@ -126,13 +147,25 @@ const NodeModal: FC<NodeModalProps> = ({
               />
             </div>
           </>
+        ) : (
+          <div>
+            <p>Specie: {nodeDataSheet?.specie}</p>
+            <p>Flow Behavior: {nodeDataSheet?.flowBehavior}</p>
+            <p>Input Connections: {nodeDataSheet?.inputConnections}</p>
+            <p>Output Connections: {nodeDataSheet?.outputConnections}</p>
+            <p>Perturbations: {nodeDataSheet?.perturbations}</p>
+          </div>
         )}
 
         {/* Add other form fields as needed */}
 
         <div className="modal-actions">
           <button onClick={onClose}>Cancel</button>
-          <button onClick={handleSave}>Submit</button>
+          {isEditing ? (
+            <button onClick={handleSave}>Save</button>
+          ) : (
+            <button onClick={() => setIsEditing(true)}>Edit</button>
+          )}
         </div>
       </div>
     </div>
