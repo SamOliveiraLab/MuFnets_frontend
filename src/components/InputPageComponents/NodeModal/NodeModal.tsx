@@ -160,11 +160,11 @@ const NodeModal: FC<NodeModalProps> = ({
         {/* Add other form fields as needed */}
 
         <div className="modal-actions">
-          <button onClick={onClose}>Cancel</button>
+          <button onClick={onClose} className="cancel">Cancel</button>
           {isEditing ? (
-            <button onClick={handleSave}>Save</button>
+            <button onClick={handleSave} className="save">Save</button>
           ) : (
-            <button onClick={() => setIsEditing(true)}>Edit</button>
+            <button onClick={() => setIsEditing(true)} className="edit">Edit</button>
           )}
         </div>
       </div>
