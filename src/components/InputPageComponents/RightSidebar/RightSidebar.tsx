@@ -1,14 +1,14 @@
-import { useContext } from 'react';
+import { useContext } from "react";
 import {
   SelectedNodeContext,
   SelectedEdgeContext,
-} from '../../../pages/HomePage';
-import { Typography } from '@mui/material';
-import NodeInformation from './NodeInformation';
-import EdgeList from './EdgeList';
-import DeleteNode from './DeleteNode';
-import EdgeInformation from './EdgeInformation';
-import './RightSidebar.css';
+} from "../../../pages/HomePage";
+import { Typography } from "@mui/material";
+import NodeInformation from "./NodeInformation";
+import EdgeList from "./EdgeList";
+import DeleteNode from "./DeleteNode";
+import EdgeInformation from "./EdgeInformation";
+import "./RightSidebar.css";
 
 /* 
   Right Sidebar
@@ -22,7 +22,7 @@ const RightSidebar = () => {
   return (
     <div className="rightsidebar-container">
       <div className="node-settings">
-        {selectedNode != '' ? (
+        {selectedNode != "" ? (
           <div>
             <Typography>Selected Node: {selectedNode}</Typography>
             <NodeInformation />
@@ -31,13 +31,13 @@ const RightSidebar = () => {
           </div>
         ) : null}
       </div>
-      <div className="edge-settings">
+      {/* <div className="edge-settings">
         {selectedEdge?.length > 0 ? (
           <div>
             <EdgeInformation />
           </div>
         ) : null}
-      </div>
+      </div> */}
     </div>
   );
 };

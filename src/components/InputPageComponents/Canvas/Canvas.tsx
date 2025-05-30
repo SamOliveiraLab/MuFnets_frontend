@@ -80,11 +80,11 @@ const LoadGraphWithHook: FC = () => {
       });
 
       edges.forEach(({ name, source, target }: any) => {
-        graph.addEdgeWithKey(name, source, target, {
-          size: 5,
-          color: nodeColors[source],
+                  graph.addEdgeWithKey(name, source, target, {
+            size: 5,
+            color: nodeColors[source],
+          });
         });
-      });
 
       loadGraph(graph);
       // assign();
