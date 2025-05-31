@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import {
   SelectedNodeContext,
   SelectedEdgeContext,
@@ -18,9 +18,11 @@ import "./RightSidebar.css";
 const RightSidebar = () => {
   const { selectedNode }: any = useContext(SelectedNodeContext);
   const { selectedEdge }: any = useContext(SelectedEdgeContext);
+  
 
   return (
     <div className="rightsidebar-container">
+
       <div className="node-settings">
         {selectedNode != "" ? (
           <div>

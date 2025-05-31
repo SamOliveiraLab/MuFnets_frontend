@@ -5,6 +5,7 @@ import {
   SelectedNodeContext,
   SelectedEdgeContext,
   NodeColorsContext,
+  HighlightNodeContext,
 } from "../../../pages/HomePage";
 import {
   SigmaContainer,
@@ -34,6 +35,12 @@ const LoadGraphWithHook: FC = () => {
   const { nodes }: any = useContext(NodesContext);
   const { edges }: any = useContext(EdgesContext);
   const { nodeColors }: any = useContext(NodeColorsContext);
+  const {
+    highlightedNode,
+    highlightTrigger,
+    setHighlightTrigger,
+    setHighlightedNode,
+  }: any = useContext(HighlightNodeContext);
 
   const [showNodeModal, setShowNodeModal] = useState(false);
   const [currentNode, setCurrentNode] = useState<{
@@ -80,11 +87,11 @@ const LoadGraphWithHook: FC = () => {
       });
 
       edges.forEach(({ name, source, target }: any) => {
-                  graph.addEdgeWithKey(name, source, target, {
-            size: 5,
-            color: nodeColors[source],
-          });
+        graph.addEdgeWithKey(name, source, target, {
+          size: 5,
+          color: nodeColors[source],
         });
+      });
 
       loadGraph(graph);
       // assign();
@@ -108,6 +115,51 @@ const LoadGraphWithHook: FC = () => {
       useContext(SelectedNodeContext);
     const { setSelectedEdge }: any = useContext(SelectedEdgeContext);
     const setSettings = useSetSettings();
+
+    useEffect(() => {
+      if (!highlightedNode || !highlightTrigger) return;
+
+      const graph = sigma.getGraph();
+      if (!graph.hasNode(highlightedNode)) return;
+
+      const { x, y } = graph.getNodeAttributes(highlightedNode);
+      sigma.getCamera().animate({ x, y, ratio: 0.5 }, { duration: 1200 });
+
+      // Reset trigger so it doesn’t run again accidentally
+      setHighlightTrigger(false);
+    }, [highlightedNode, highlightTrigger]);
+
+
+
+    useEffect(() => {
+      if (!highlightedNode || !highlightTrigger) return;
+
+      const graph = sigma.getGraph();
+      if (!graph.hasNode(highlightedNode)) return;
+
+      const originalSize = graph.getNodeAttribute(highlightedNode, "size");
+
+      let pulseCount = 0;
+      const pulse = () => {
+        if (pulseCount >= 3) {
+          graph.setNodeAttribute(highlightedNode, "size", originalSize);
+          return;
+        }
+
+        graph.setNodeAttribute(highlightedNode, "size", originalSize * 1.6);
+        setTimeout(() => {
+          graph.setNodeAttribute(highlightedNode, "size", originalSize);
+          setTimeout(() => {
+            pulseCount++;
+            pulse();
+          }, 250);
+        }, 250);
+      };
+
+      pulse();
+    }, [highlightedNode, highlightTrigger]);
+
+
 
     // Event listeners
     useEffect(() => {
@@ -204,6 +256,10 @@ const LoadGraphWithHook: FC = () => {
             setSelectedNode("");
             setSelectedEdge("");
           }
+
+          if (highlightedNode) {
+            setHighlightedNode("");
+          }
         },
 
         clickEdge: (e) => {
@@ -258,6 +314,20 @@ const LoadGraphWithHook: FC = () => {
         },
       });
     }, [selectedNode, nodes, edges, setSettings, sigma]);
+
+    useEffect(() => {
+      if (!highlightedNode || highlightedNode === "") return;
+
+      setSettings({
+        nodeReducer: (node, data) => {
+          return {
+            ...data,
+            color: node === highlightedNode ? "#FF0000" : data.color,
+            zIndex: node === highlightedNode ? 999 : data.zIndex,
+          };
+        },
+      });
+    }, [highlightedNode, setSettings]);
 
     return null;
   };

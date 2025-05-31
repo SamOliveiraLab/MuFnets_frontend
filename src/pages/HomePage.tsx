@@ -10,6 +10,8 @@ export const SelectedNodeContext: any = React.createContext('');
 export const SelectedEdgeContext: any = React.createContext('');
 export const UpdateContext: any = React.createContext('');
 export const NodeColorsContext: any = React.createContext('');
+export const HighlightNodeContext = React.createContext<any>({});
+
 
 export type Node = {
   name: string;
@@ -42,6 +44,8 @@ const HomePage = () => {
   const [update, setUpdate] = useState<boolean>(false);
 
   const { prevGraph, setPrevGraph }: any = useOutletContext();
+  const [highlightedNode, setHighlightedNode] = useState("");
+  const [highlightTrigger, setHighlightTrigger] = useState(false);
 
   useEffect(() => {
     if (prevGraph) {
@@ -61,25 +65,36 @@ const HomePage = () => {
   }, [nodes, edges, nodeColors]);
 
   return (
-    <NodeColorsContext.Provider value={{ nodeColors, setNodeColors }}>
-      <UpdateContext.Provider value={{ update, setUpdate }}>
-        <SelectedEdgeContext.Provider value={{ selectedEdge, setSelectedEdge }}>
-          <SelectedNodeContext.Provider
-            value={{ selectedNode, setSelectedNode }}
+    <HighlightNodeContext.Provider
+      value={{
+        highlightedNode,
+        setHighlightedNode,
+        highlightTrigger,
+        setHighlightTrigger,
+      }}
+    >
+      <NodeColorsContext.Provider value={{ nodeColors, setNodeColors }}>
+        <UpdateContext.Provider value={{ update, setUpdate }}>
+          <SelectedEdgeContext.Provider
+            value={{ selectedEdge, setSelectedEdge }}
           >
-            <EdgesContext.Provider value={{ edges, setEdges }}>
-              <NodesContext.Provider value={{ nodes, setNodes }}>
-                <div className="homepage-layout">
-                  <LeftSidebar />
-                  <Canvas />
-                  <RightSidebar />
-                </div>
-              </NodesContext.Provider>
-            </EdgesContext.Provider>
-          </SelectedNodeContext.Provider>
-        </SelectedEdgeContext.Provider>
-      </UpdateContext.Provider>
-    </NodeColorsContext.Provider>
+            <SelectedNodeContext.Provider
+              value={{ selectedNode, setSelectedNode }}
+            >
+              <EdgesContext.Provider value={{ edges, setEdges }}>
+                <NodesContext.Provider value={{ nodes, setNodes }}>
+                  <div className="homepage-layout">
+                    <LeftSidebar />
+                    <Canvas />
+                    <RightSidebar />
+                  </div>
+                </NodesContext.Provider>
+              </EdgesContext.Provider>
+            </SelectedNodeContext.Provider>
+          </SelectedEdgeContext.Provider>
+        </UpdateContext.Provider>
+      </NodeColorsContext.Provider>
+    </HighlightNodeContext.Provider>
   );
 };
 

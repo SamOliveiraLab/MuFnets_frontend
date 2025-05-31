@@ -4,12 +4,14 @@ import EdgesList from './EdgesList';
 import NodesList from './NodesList';
 import CreateNodeForm from './CreateNodeForm';
 import CanvasDownloadButton from './CanvasDownloadButton';
+import SearchButton from './SearchButton';
 import './LeftSidebar.css';
 
 const LeftSidebar = () => {
   return (
     <div className="leftsidebar-container">
       <CreateNodeForm />
+      <SearchButton />
       <div className="node-and-edge-list">
         <NodesList />
         <EdgesList />
