@@ -282,6 +282,7 @@ const NodeModal: FC<NodeModalProps> = ({
             <p>mu_death: {nodeDataSheet?.mu_death}</p>
             <p>OD_desired: {nodeDataSheet?.OD_desired}</p>
             <p>K: {nodeDataSheet?.K}</p>
+            <p>S_in: {nodeDataSheet?.S_in}</p>
           </div>
         )}
 

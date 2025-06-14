@@ -9,6 +9,7 @@ import EdgeList from "./EdgeList";
 import DeleteNode from "./DeleteNode";
 import EdgeInformation from "./EdgeInformation";
 import "./RightSidebar.css";
+import UploadNodeJson from "./uploadNodeJson";
 
 /* 
   Right Sidebar
@@ -18,12 +19,13 @@ import "./RightSidebar.css";
 const RightSidebar = () => {
   const { selectedNode }: any = useContext(SelectedNodeContext);
   const { selectedEdge }: any = useContext(SelectedEdgeContext);
-  
 
   return (
     <div className="rightsidebar-container">
-
       <div className="node-settings">
+        
+        <UploadNodeJson />
+
         {selectedNode != "" ? (
           <div>
             <Typography>Selected Node: {selectedNode}</Typography>

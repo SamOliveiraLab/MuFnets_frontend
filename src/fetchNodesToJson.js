@@ -24,11 +24,11 @@ async function fetchAndSave() {
     const d = doc.data();
     return {
       id: doc.id,
-      species: d.specie,
-      flow_behavior: d.flowBehavior,
-      inputs: d.inputConnections,
-      outputs: d.outputConnections,
-      perturbation: d.perturbations,
+      specie: d.specie,
+      flowBehavior: d.flowBehavior,
+      inputConnections: d.inputConnections,
+      outputConnections: d.outputConnections,
+      perturbations: d.perturbations,
       flow_rate: d.flow_rate,
       volume: d.volume,
       mu_max: d.mu_max,
