@@ -252,11 +252,11 @@ const LoadGraphWithHook: FC = () => {
             setIsDrawingEdge(false);
             setEdgeStartNode(null);
             setCursorPos(null);
-          } else {
+} else {
             setSelectedNode("");
             setSelectedEdge("");
-          }
-
+          } 
+          
           if (highlightedNode) {
             setHighlightedNode("");
           }
@@ -270,9 +270,9 @@ const LoadGraphWithHook: FC = () => {
           });
 
           if (parallel.length == 1) {
-            setSelectedEdge([e.edge, parallel[0].name]);
+          setSelectedEdge([e.edge, parallel[0].name]);
           } else {
-            setSelectedEdge([e.edge]);
+          setSelectedEdge([e.edge]);
           }
         },
       });

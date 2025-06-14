@@ -38,9 +38,9 @@ const EdgeList = () => {
               });
 
               if (parallel.length == 1) {
-                setSelectedEdge([edge.name, parallel[0].name]);
+              setSelectedEdge([edge.name, parallel[0].name]);
               } else {
-                setSelectedEdge([edge.name]);
+              setSelectedEdge([edge.name]);
               }
             }}
           >
