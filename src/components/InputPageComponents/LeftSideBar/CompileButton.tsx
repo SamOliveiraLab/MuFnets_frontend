@@ -64,7 +64,12 @@ const CompileButton = () => {
       color="secondary"
       onClick={handleCompile}
       disabled={edges.length === 0}
-      style={{ width: '80%', borderRadius: 30, fontSize: '.85rem' }}
+      style={{
+        width: "90%",
+        borderRadius: 30,
+        fontSize: ".85rem",
+        marginBottom: "10px",
+      }}
     >
       Compile
     </Button>

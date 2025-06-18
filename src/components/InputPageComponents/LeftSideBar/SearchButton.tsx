@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { Typography, TextField, Button } from "@mui/material";
 
 import { HighlightNodeContext } from "../../../pages/HomePage";
 
@@ -10,48 +11,41 @@ const SearchButton = () => {
 
   const handleSearch = () => {
     setHighlightedNode(searchId);
-    setHighlightTrigger(true); 
+    setHighlightTrigger(true);
     setSearchId("");
   };
   return (
     <div
       style={{
-        marginBottom: "0.75rem",
+        flex: 1,
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
+        width: "80%",
       }}
     >
-      <h2 style={{ fontWeight: "bold" }}> Search Node</h2>
-      <input
-        type="text"
+      <Typography variant="h6" fontWeight="bold">
+        Search Node
+      </Typography>
+
+      <TextField
+        variant="outlined"
         placeholder="Search Node ID"
         value={searchId}
         onChange={(e) => setSearchId(e.target.value)}
-        style={{
-          marginBottom: "0.75rem",
-          padding: "0.75rem 0.25rem",
-
-          border: "0.125rem solid light grey",
-          textAlign: "center",
-          fontSize: "15px",
-        }}
+        fullWidth
+        margin="normal"
       />
-      <button
+
+      <Button
         onClick={handleSearch}
-        style={{
-          backgroundColor: "#2196F3",
-          padding: "0.5rem 0.5rem",
-          color: "white",
-          outline: "none",
-          border: "0.125rem solid #2196F3",
-          borderRadius: 30,
-          marginBottom: "0.75rem",
-          cursor: 'pointer',
-        }}
+        variant="contained"
+        color="secondary"
+        type="submit"
+        fullWidth
+        style={{ borderRadius: 30, marginTop: 10, marginBottom: 10 }}
       >
         Search
-      </button>
+      </Button>
     </div>
   );
 };

@@ -30,7 +30,7 @@ const DownloadButton = () => {
 
   return (
     <Button
-      style={{ width: '80%', borderRadius: 30, fontSize: '.85rem' }}
+      style={{ width: '90%', borderRadius: 30, fontSize: '.85rem' }}
       variant="contained"
       color="secondary"
       onClick={exportData}

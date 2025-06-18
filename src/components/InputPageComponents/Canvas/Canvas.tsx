@@ -21,6 +21,7 @@ import { MultiDirectedGraph } from "graphology";
 import "@react-sigma/core/lib/react-sigma.min.css";
 import "./Canvas.css";
 import NodeModal from "../NodeModal/NodeModal";
+import ResetLayoutButton from "../RightSidebar/ResetLayoutButton";
 
 /* 
   Canvas
@@ -71,7 +72,13 @@ const LoadGraphWithHook: FC = () => {
       const graph = new MultiDirectedGraph();
       const existingGraph = sigma?.getGraph?.();
 
-      nodes.forEach(({ name, attributes, settings }: any) => {
+      const nodeCount = nodes.length;
+      const radius = 100; // change as needed
+      const centerX = 0;
+      const centerY = 0;
+
+      nodes.forEach(({ name, attributes, settings }: any, i: number) => {
+        const angle = (2 * Math.PI * i) / nodeCount;
         const existingAttributes = existingGraph?.hasNode(name)
           ? existingGraph.getNodeAttributes(name)
           : {};
@@ -80,9 +87,10 @@ const LoadGraphWithHook: FC = () => {
           size: settings.height,
           color: attributes.color,
           ...attributes,
-          x: existingAttributes.x ?? Math.random(),
-          y: existingAttributes.y ?? Math.random(),
+          x: existingAttributes.x ?? centerX + radius * Math.cos(angle),
+          y: existingAttributes.y ?? centerY + radius * Math.sin(angle),
         };
+
         graph.addNode(name, nodeAttributes);
       });
 
@@ -94,7 +102,6 @@ const LoadGraphWithHook: FC = () => {
       });
 
       loadGraph(graph);
-      // assign();
     }, [nodes, edges, nodeColors, loadGraph]);
 
     return null;
@@ -105,12 +112,7 @@ const LoadGraphWithHook: FC = () => {
     const registerEvents = useRegisterEvents();
     const sigma = useSigma();
     const [draggedNode, setDraggedNode] = useState<string | null>(null);
-    const [isDrawingEdge, setIsDrawingEdge] = useState(false);
-    const [edgeStartNode, setEdgeStartNode] = useState<string | null>(null);
-    const [cursorPos, setCursorPos] = useState<{ x: number; y: number } | null>(
-      null
-    );
-    const { edges, setEdges }: any = useContext(EdgesContext);
+    const { edges }: any = useContext(EdgesContext);
     const { selectedNode, setSelectedNode }: any =
       useContext(SelectedNodeContext);
     const { setSelectedEdge }: any = useContext(SelectedEdgeContext);
@@ -128,8 +130,6 @@ const LoadGraphWithHook: FC = () => {
       // Reset trigger so it doesn’t run again accidentally
       setHighlightTrigger(false);
     }, [highlightedNode, highlightTrigger]);
-
-
 
     useEffect(() => {
       if (!highlightedNode || !highlightTrigger) return;
@@ -159,8 +159,6 @@ const LoadGraphWithHook: FC = () => {
       pulse();
     }, [highlightedNode, highlightTrigger]);
 
-
-
     // Event listeners
     useEffect(() => {
       let didDrag = false;
@@ -168,29 +166,7 @@ const LoadGraphWithHook: FC = () => {
 
       const handleClickNode = (e: any) => {
         if (didDrag) return;
-
-        if (clickTimeout) clearTimeout(clickTimeout);
-        clickTimeout = setTimeout(() => {
-          if (isDrawingEdge && edgeStartNode && edgeStartNode !== e.node) {
-            // Finish drawing the edge
-            const newEdge = {
-              name: `${edgeStartNode}->${e.node}`,
-              source: edgeStartNode,
-              target: e.node,
-            };
-
-            setEdges((prev: any[]) => [...prev, newEdge]);
-            setIsDrawingEdge(false);
-            setEdgeStartNode(null);
-            setCursorPos(null);
-          } else {
-            // Begin edge drawing
-            setIsDrawingEdge(true);
-            setEdgeStartNode(e.node);
-          }
-          setSelectedNode(e.node);
-          clickTimeout = null;
-        }, 200);
+        setSelectedNode(e.node);
       };
 
       const handleDoubleClickNode = (e: any) => {
@@ -227,9 +203,6 @@ const LoadGraphWithHook: FC = () => {
             e.preventSigmaDefault();
             e.original.preventDefault();
             e.original.stopPropagation();
-          } else if (isDrawingEdge) {
-            const pos = sigma.viewportToGraph(e);
-            setCursorPos({ x: pos.x, y: pos.y });
           }
         },
         // On mouse up, we reset the autoscale and the dragging mode
@@ -243,20 +216,10 @@ const LoadGraphWithHook: FC = () => {
         mousedown: () => {
           if (!sigma.getCustomBBox()) sigma.setCustomBBox(sigma.getBBox());
         },
-        // clickNode: (e) => {
-        //   if (didDrag) return;
-        //   setSelectedNode(e.node);
-        // },
         clickStage: () => {
-          if (isDrawingEdge) {
-            setIsDrawingEdge(false);
-            setEdgeStartNode(null);
-            setCursorPos(null);
-} else {
-            setSelectedNode("");
-            setSelectedEdge("");
-          } 
-          
+          setSelectedNode("");
+          setSelectedEdge("");
+
           if (highlightedNode) {
             setHighlightedNode("");
           }
@@ -270,33 +233,13 @@ const LoadGraphWithHook: FC = () => {
           });
 
           if (parallel.length == 1) {
-          setSelectedEdge([e.edge, parallel[0].name]);
+            setSelectedEdge([e.edge, parallel[0].name]);
           } else {
-          setSelectedEdge([e.edge]);
+            setSelectedEdge([e.edge]);
           }
         },
       });
-
-      const handleEscKey = (e: KeyboardEvent) => {
-        if (e.key === "Escape") {
-          setIsDrawingEdge(false);
-          setEdgeStartNode(null);
-          setCursorPos(null);
-        }
-      };
-
-      window.addEventListener("keydown", handleEscKey);
-      return () => {
-        if (clickTimeout) clearTimeout(clickTimeout);
-      };
-    }, [
-      registerEvents,
-      sigma,
-      draggedNode,
-      edges,
-      isDrawingEdge,
-      edgeStartNode,
-    ]);
+    }, [registerEvents, sigma, draggedNode, edges]);
 
     //Code taken from react sigma docs, used to hide edges not related to current selected node
     useEffect(() => {
@@ -343,6 +286,7 @@ const LoadGraphWithHook: FC = () => {
       >
         <Graph />
         <GraphEvents />
+        <ResetLayoutButton />
         <ControlsContainer position={"bottom-right"}>
           <ZoomControl />
         </ControlsContainer>

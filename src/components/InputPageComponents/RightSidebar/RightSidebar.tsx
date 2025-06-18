@@ -11,6 +11,8 @@ import EdgeInformation from "./EdgeInformation";
 import "./RightSidebar.css";
 import UploadNodeJson from "./uploadNodeJson";
 
+
+
 /* 
   Right Sidebar
     This sidebar is used primarily to view and update the settings of the nodes and edges
@@ -25,9 +27,9 @@ const RightSidebar = () => {
       <div className="node-settings">
         
         <UploadNodeJson />
-
+      
         {selectedNode != "" ? (
-          <div>
+          <div style={{paddingTop: 10, paddingLeft: 10}}>
             <Typography>Selected Node: {selectedNode}</Typography>
             <NodeInformation />
             <EdgeList />
@@ -35,13 +37,13 @@ const RightSidebar = () => {
           </div>
         ) : null}
       </div>
-      {/* <div className="edge-settings">
+      <div className="edge-settings">
         {selectedEdge?.length > 0 ? (
           <div>
             <EdgeInformation />
           </div>
         ) : null}
-      </div> */}
+      </div>
     </div>
   );
 };

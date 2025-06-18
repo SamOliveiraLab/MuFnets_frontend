@@ -134,7 +134,7 @@ const CreateNodeForm = () => {
         <>
           <TextField
             variant="outlined"
-            placeholder="Base Name (e.g., Sensor)"
+            placeholder="Base Name"
             value={batchInfo.baseName}
             onChange={(e) =>
               setBatchInfo({ ...batchInfo, baseName: e.target.value })
@@ -183,7 +183,7 @@ const CreateNodeForm = () => {
             ? singleNode.name.trim() === ""
             : batchInfo.baseName.trim() === "" || batchInfo.count <= 0
         }
-        style={{ borderRadius: 30, marginTop: 16 }}
+        style={{ borderRadius: 30, marginTop: 16, marginBottom: 10 }}
       >
         Create
       </Button>

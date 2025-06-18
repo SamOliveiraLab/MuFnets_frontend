@@ -81,7 +81,7 @@ const UploadButton = () => {
       variant="contained"
       component="label"
       color="secondary"
-      style={{ width: '80%', borderRadius: 30, fontSize: '.85rem' }}
+      style={{ width: '90%', borderRadius: 30, fontSize: '.85rem', margin: '10px 0' }}
     >
       Upload Graph
       <input hidden type="file" accept=".json" onChange={handleUpload} />
