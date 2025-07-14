@@ -16,7 +16,7 @@ const CreateNodeForm = () => {
   const [singleNode, setSingleNode] = useState({ name: "", height: 10 });
   const [batchInfo, setBatchInfo] = useState({
     baseName: "",
-    count: 3,
+        count: 3,
     height: 10,
   });
 
@@ -101,7 +101,7 @@ const CreateNodeForm = () => {
         sx={{ my: 1 }}
       >
         <ToggleButton value="single">Single</ToggleButton>
-        <ToggleButton value="batch">Batch</ToggleButton>
+        <ToggleButton value="batch">Group</ToggleButton>
       </ToggleButtonGroup>
 
       {mode === "single" ? (
@@ -116,7 +116,7 @@ const CreateNodeForm = () => {
             fullWidth
             margin="normal"
           />
-          <Typography variant="subtitle1">Height:</Typography>
+                    <Typography variant="subtitle1">Height:</Typography>
           <Select
             value={singleNode.height}
             onChange={(e) =>
@@ -142,7 +142,7 @@ const CreateNodeForm = () => {
             fullWidth
             margin="normal"
           />
-          <TextField
+                    <TextField
             type="number"
             variant="outlined"
             placeholder="Number of Nodes"

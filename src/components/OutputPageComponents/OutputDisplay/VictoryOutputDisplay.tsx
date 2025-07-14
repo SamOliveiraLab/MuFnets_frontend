@@ -21,7 +21,7 @@ const VictoryOutputDisplay = () => {
     if (output != '') {
       const { predArray, topoOrder, orderedAdj, endpoints, unfolded } = output;
       console.log(output);
-      //nodeToNumber will map each node to a numerical x value that will be used to determine the axis as well as for mapping the custom svgs based on length
+            //nodeToNumber will map each node to a numerical x value that will be used to determine the axis as well as for mapping the custom svgs based on length
       let correctOrder = topoOrder && Array.isArray(topoOrder) ? topoOrder.reverse() : [];
       let mcList = {};
       let endMC = null;
@@ -94,73 +94,73 @@ const VictoryOutputDisplay = () => {
 
       for (const row in unfolded) {
         unfolded[row].forEach((connection: any) => {
-          const [source, target, communication, deviceType] = connection;
+            const [source, target, communication, deviceType] = connection;
 
-          // based on the formatting of output from algorithm
-          if (deviceType != 'MC') {
-            const [row, _] = orderedAdj[source][0];
-            switch (deviceType) {
-              case 'MFM':
-                MFMS = [
-                  ...MFMS,
-                  {
-                    source: source,
-                    target: target,
-                    data: [
-                      { x: nodeToNumber[source], y: row },
-                      { x: nodeToNumber[target], y: row },
-                    ],
-                  },
-                ];
-                break;
-              case 'MCM':
-                MCMS = [
-                  ...MCMS,
-                  {
-                    source: source,
-                    target: target,
-                    data: [
-                      { x: nodeToNumber[source], y: row },
-                      { x: nodeToNumber[target], y: row },
-                    ],
-                  },
-                ];
-                break;
-              case 'bridge':
-                Bridges = [
-                  ...Bridges,
-                  {
-                    source: source,
-                    target: target,
-                    data: [
-                      { x: nodeToNumber[source], y: row },
-                      {
-                        x:
-                          endMC == `${source}/${target}`
-                            ? nodeToNumber[target] + 1
-                            : nodeToNumber[target],
-                        y: row,
-                      },
-                    ],
-                  },
-                ];
-                break;
+            // based on the formatting of output from algorithm
+            if (deviceType != 'MC') {
+              const [row, _] = orderedAdj[source][0];
+              switch (deviceType) {
+                case 'MFM':
+                  MFMS = [
+                    ...MFMS,
+                    {
+                      source: source,
+                      target: target,
+                      data: [
+                        { x: nodeToNumber[source], y: row },
+                        { x: nodeToNumber[target], y: row },
+                      ],
+                    },
+                  ];
+                  break;
+                case 'MCM':
+                  MCMS = [
+                    ...MCMS,
+                    {
+                      source: source,
+                      target: target,
+                      data: [
+                        { x: nodeToNumber[source], y: row },
+                        { x: nodeToNumber[target], y: row },
+                      ],
+                    },
+                  ];
+                  break;
+                case 'bridge':
+                  Bridges = [
+                    ...Bridges,
+                    {
+                      source: source,
+                      target: target,
+                      data: [
+                        { x: nodeToNumber[source], y: row },
+                        {
+                          x:
+                            endMC == `${source}/${target}`
+                              ? nodeToNumber[target] + 1
+                              : nodeToNumber[target],
+                          y: row,
+                        },
+                      ],
+                    },
+                  ];
+                  break;
+              }
+            } else {
+              MCS = [
+                ...MCS,
+                {
+                  source: source,
+                  target: target,
+                  data: [
+                    { x: nodeToNumber[target], y: row },
+                    { x: nodeToNumber[target], y: row },
+                  ],
+                },
+              ];
             }
-          } else {
-            MCS = [
-              ...MCS,
-              {
-                source: source,
-                target: target,
-                data: [
-                  { x: nodeToNumber[target], y: row },
-                  { x: nodeToNumber[target], y: row },
-                ],
-              },
-            ];
-          }
-        });
-      }
+          });
+              }
 
       setCurrentNetwork({
         xDomain,
@@ -175,8 +175,11 @@ const VictoryOutputDisplay = () => {
         MFMS,
         Bridges,
       });
+    
     }
   }, [output]);
+
+  console.log(currentNetwork);
 
   return (
     currentNetwork && (
@@ -192,17 +195,17 @@ const VictoryOutputDisplay = () => {
         >
           <VictoryAxis
             style={{
-              axis: { stroke: 'transparent' },
-              ticks: { stroke: 'transparent' },
-              tickLabels: { fill: 'transparent' },
+              axis: { stroke: "red" },
+              ticks: { stroke: "red" },
+              tickLabels: { fill: "red" },
             }}
           />
           <VictoryAxis
             dependentAxis
             style={{
-              axis: { stroke: 'transparent' },
-              ticks: { stroke: 'transparent' },
-              tickLabels: { fill: 'transparent' },
+              axis: { stroke: "red" },
+              ticks: { stroke: "red" },
+              tickLabels: { fill: "red" },
             }}
           />
           {currentNetwork.correctOrder.map((cell: string) => {

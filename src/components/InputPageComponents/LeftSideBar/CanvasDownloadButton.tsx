@@ -15,17 +15,19 @@ const DownloadButton = () => {
   const { edges }: any = useContext(EdgesContext);
 
   const exportData = () => {
+    const jsonData = {
+      nodes,
+      edges,
+      downloaded: true,
+    };
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
-      JSON.stringify({
-        nodes,
-        edges,
-        downloaded: true,
-      })
+      JSON.stringify(jsonData)
     )}`;
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = jsonString;
-    link.download = 'data.json';
+    link.download = "data.json";
     link.click();
+
   };
 
   return (

@@ -41,8 +41,8 @@ async function fetchAndSave() {
     };
   });
 
-  fs.writeFileSync("cells_info.json", JSON.stringify(data, null, 2));
-  console.log("✔️ Data exported to cells_info.json");
+  const result = fs.writeFileSync("cells_info.json", JSON.stringify(data, null, 2));
+  console.log(result);
 }
 
 fetchAndSave().catch(console.error);

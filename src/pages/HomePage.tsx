@@ -1,17 +1,19 @@
-import LeftSidebar from '../components/InputPageComponents/LeftSideBar/LeftSidebar';
-import Canvas from '../components/InputPageComponents/Canvas/Canvas';
-import RightSidebar from '../components/InputPageComponents/RightSidebar/RightSidebar';
-import React, { useEffect, useState } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import LeftSidebar from "../components/InputPageComponents/LeftSideBar/LeftSidebar";
+import Canvas from "../components/InputPageComponents/Canvas/Canvas";
+import RightSidebar from "../components/InputPageComponents/RightSidebar/RightSidebar";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
+import OuputPage from "./OuputPage";
 
 export const NodesContext: any = React.createContext([]);
+export const allNodesContext: any = React.createContext([]);
 export const EdgesContext: any = React.createContext([]);
-export const SelectedNodeContext: any = React.createContext('');
-export const SelectedEdgeContext: any = React.createContext('');
-export const UpdateContext: any = React.createContext('');
-export const NodeColorsContext: any = React.createContext('');
-export const HighlightNodeContext = React.createContext<any>({});
+export const SelectedNodeContext: any = React.createContext("");
+export const SelectedEdgeContext: any = React.createContext("");
 
+export const UpdateContext: any = React.createContext("");
+export const NodeColorsContext: any = React.createContext("");
+export const HighlightNodeContext = React.createContext<any>({});
 
 export type Node = {
   name: string;
@@ -32,7 +34,7 @@ export type Edge = {
   target: string;
   settings?: {
     communicationType?: string;
-  };
+      };
 };
 
 const HomePage = () => {
@@ -42,7 +44,8 @@ const HomePage = () => {
   const [selectedEdge, setSelectedEdge] = useState<string[]>([]);
   const [nodeColors, setNodeColors] = useState<any>({});
   const [update, setUpdate] = useState<boolean>(false);
-
+  const [allNodesData, setAllNodesData] = useState<any[]>([]);
+  const [selectedType, setSelectedType] = useState<string>("milifluidics");
   const { prevGraph, setPrevGraph }: any = useOutletContext();
   const [highlightedNode, setHighlightedNode] = useState("");
   const [highlightTrigger, setHighlightTrigger] = useState(false);
@@ -65,36 +68,38 @@ const HomePage = () => {
   }, [nodes, edges, nodeColors]);
 
   return (
-    <HighlightNodeContext.Provider
-      value={{
-        highlightedNode,
-        setHighlightedNode,
-        highlightTrigger,
-        setHighlightTrigger,
-      }}
-    >
-      <NodeColorsContext.Provider value={{ nodeColors, setNodeColors }}>
-        <UpdateContext.Provider value={{ update, setUpdate }}>
-          <SelectedEdgeContext.Provider
-            value={{ selectedEdge, setSelectedEdge }}
-          >
-            <SelectedNodeContext.Provider
-              value={{ selectedNode, setSelectedNode }}
+    <allNodesContext.Provider value={{ allNodesData, setAllNodesData }}>
+      <HighlightNodeContext.Provider
+        value={{
+          highlightedNode,
+          setHighlightedNode,
+          highlightTrigger,
+          setHighlightTrigger,
+        }}
+      >
+        <NodeColorsContext.Provider value={{ nodeColors, setNodeColors }}>
+          <UpdateContext.Provider value={{ update, setUpdate }}>
+            <SelectedEdgeContext.Provider
+              value={{ selectedEdge, setSelectedEdge }}
             >
-              <EdgesContext.Provider value={{ edges, setEdges }}>
-                <NodesContext.Provider value={{ nodes, setNodes }}>
-                  <div className="homepage-layout">
-                    <LeftSidebar />
-                    <Canvas />
-                    <RightSidebar />
-                  </div>
-                </NodesContext.Provider>
-              </EdgesContext.Provider>
-            </SelectedNodeContext.Provider>
-          </SelectedEdgeContext.Provider>
-        </UpdateContext.Provider>
-      </NodeColorsContext.Provider>
-    </HighlightNodeContext.Provider>
+              <SelectedNodeContext.Provider
+                value={{ selectedNode, setSelectedNode }}
+              >
+                <EdgesContext.Provider value={{ edges, setEdges }}>
+                  <NodesContext.Provider value={{ nodes, setNodes }}>
+                    <div className="homepage-layout">
+                      <LeftSidebar />
+                      <Canvas />
+                      <RightSidebar />
+                    </div>
+                  </NodesContext.Provider>
+                </EdgesContext.Provider>
+              </SelectedNodeContext.Provider>
+            </SelectedEdgeContext.Provider>
+          </UpdateContext.Provider>
+        </NodeColorsContext.Provider>
+      </HighlightNodeContext.Provider>
+    </allNodesContext.Provider>
   );
 };
 

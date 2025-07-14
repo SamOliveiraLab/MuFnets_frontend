@@ -1,6 +1,13 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useContext } from "react";
 import { db } from "../../../firebase";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { allNodesContext } from "../../../pages/HomePage";
+import {
+  doc,
+  setDoc,
+  getDoc,
+  collection,
+  onSnapshot,
+} from "firebase/firestore";
 import "./NodeModal.css"; // We'll create this CSS file next
 
 interface NodeModalProps {
@@ -17,11 +24,11 @@ const NodeModal: FC<NodeModalProps> = ({
   onSave,
 }) => {
   const [formData, setFormData] = useState({
-    specie: nodeData.specie || "",
-    flowBehavior: nodeData.flowBehavior || "",
-    inputConnections: nodeData.inputConnections || [],
-    outputConnections: nodeData.outputConnections || [],
-    perturbations: nodeData.perturbations || [],
+    species: nodeData.species || "",
+    flow_behavior: nodeData.flow_behavior || "",
+    inputs: nodeData.inputs || [],
+    outputs: nodeData.outputs || [],
+    perturbation: nodeData.perturbation || [],
     flow_rate: nodeData.flow_rate,
     volume: nodeData.volume,
     mu_max: nodeData.mu_max,
@@ -32,22 +39,23 @@ const NodeModal: FC<NodeModalProps> = ({
     K: nodeData.K,
     S_in: nodeData.S_in,
   });
-  
-
+  const { setAllNodesData }: any = useContext(allNodesContext);
+  // const [allNodesData, setAllNodesData] = useState<any[]>([]);
 
   const handleSave = async () => {
     try {
       const cleanedData = {
-        ...formData,
-        inputConnections: formData.inputConnections
+        species: formData.species ,
+        flow_behavior: formData.flow_behavior ,
+        inputs: formData.inputs
           .split(",")
           .map((s) => s.trim())
           .filter(Boolean),
-        outputConnections: formData.outputConnections
+        outputs: formData.outputs
           .split(",")
           .map((s) => s.trim())
           .filter(Boolean),
-        perturbations: formData.perturbations
+        perturbation: formData.perturbation
           .split(",")
           .map((s) => s.trim())
           .filter(Boolean),
@@ -75,7 +83,6 @@ const NodeModal: FC<NodeModalProps> = ({
 
   const [isEditing, setIsEditing] = useState(nodeDataSheet ? false : true);
 
-
   useEffect(() => {
     const fetchNodeData = async () => {
       const docRef = doc(db, "nodes", nodeId);
@@ -84,12 +91,12 @@ const NodeModal: FC<NodeModalProps> = ({
         const data = docSnap.data();
         setNodeDataSheet(data);
         setFormData({
-          specie: data.specie || "",
-          flowBehavior: data.flowBehavior || "",
-          inputConnections: (data.inputConnections || []).join(", "),
-          outputConnections: (data.outputConnections || []).join(", "),
+          species: data.species || "",
+          flow_behavior: data.flow_behavior || "",
+          inputs: (data.inputs || []).join(", "),
+          outputs: (data.outputs || []).join(", "),
           flow_rate: data.flow_rate,
-          perturbations: (data.perturbations || []).join(", "),
+          perturbation: (data.perturbation || []).join(", "),
           volume: data.volume,
           mu_max: data.mu_max,
           Ks: data.Ks,
@@ -108,9 +115,20 @@ const NodeModal: FC<NodeModalProps> = ({
     fetchNodeData();
   }, [nodeId]);
 
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "nodes"), (snapshot) => {
+      const updatedDocs: any[] = [];
+      snapshot.forEach((doc) => {
+        updatedDocs.push({ id: doc.id, ...doc.data() });
+      });
+      setAllNodesData(updatedDocs);
+      // console.log("Live update: All nodes", updatedDocs);
+    });
 
+    return () => unsubscribe(); // Cleanup the listener on unmount
+  }, []);
 
-  
+   
 
   return (
     <div className="node-modal-overlay">
@@ -124,9 +142,9 @@ const NodeModal: FC<NodeModalProps> = ({
             <div className="form-section">
               <label>Specie:</label>
               <input
-                value={formData.specie}
+                value={formData.species}
                 onChange={(e) =>
-                  setFormData({ ...formData, specie: e.target.value })
+                  setFormData({ ...formData, species: e.target.value })
                 }
               />
             </div>
@@ -134,9 +152,9 @@ const NodeModal: FC<NodeModalProps> = ({
             <div className="form-section">
               <label>Flow Behavior:</label>
               <input
-                value={formData.flowBehavior}
+                value={formData.flow_behavior}
                 onChange={(e) =>
-                  setFormData({ ...formData, flowBehavior: e.target.value })
+                  setFormData({ ...formData, flow_behavior: e.target.value })
                 }
               />
             </div>
@@ -144,9 +162,9 @@ const NodeModal: FC<NodeModalProps> = ({
             <div className="form-section">
               <label>Input Connections:</label>
               <input
-                value={formData.inputConnections}
+                value={formData.inputs}
                 onChange={(e) =>
-                  setFormData({ ...formData, inputConnections: e.target.value })
+                  setFormData({ ...formData, inputs: e.target.value })
                 }
               />
             </div>
@@ -154,11 +172,11 @@ const NodeModal: FC<NodeModalProps> = ({
             <div className="form-section">
               <label>Output Connections:</label>
               <input
-                value={formData.outputConnections}
+                value={formData.outputs}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    outputConnections: e.target.value,
+                    outputs: e.target.value,
                   })
                 }
               />
@@ -180,9 +198,9 @@ const NodeModal: FC<NodeModalProps> = ({
             <div className="form-section">
               <label>Perturbations:</label>
               <input
-                value={formData.perturbations}
+                value={formData.perturbation}
                 onChange={(e) =>
-                  setFormData({ ...formData, perturbations: e.target.value })
+                  setFormData({ ...formData, perturbation: e.target.value })
                 }
               />
             </div>
@@ -269,11 +287,11 @@ const NodeModal: FC<NodeModalProps> = ({
           </>
         ) : (
           <div>
-            <p>Specie: {nodeDataSheet?.specie}</p>
-            <p>Flow Behavior: {nodeDataSheet?.flowBehavior}</p>
-            <p>Input Connections: {nodeDataSheet?.inputConnections}</p>
-            <p>Output Connections: {nodeDataSheet?.outputConnections}</p>
-            <p>Perturbations: {nodeDataSheet?.perturbations}</p>
+            <p>Species: {nodeDataSheet?.species}</p>
+            <p>Flow_behavior: {nodeDataSheet?.flow_behavior}</p>
+            <p>Inputs: {nodeDataSheet?.inputs}</p>
+            <p>Outputs: {nodeDataSheet?.outputs}</p>
+            <p>Perturbation: {nodeDataSheet?.perturbation}</p>
             <p>Flow Rate: {nodeDataSheet?.flow_rate}</p>
             <p>Volume: {nodeDataSheet?.volume}</p>
             <p>Mu_max: {nodeDataSheet?.mu_max}</p>
