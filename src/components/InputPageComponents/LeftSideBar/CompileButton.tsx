@@ -14,27 +14,27 @@ import { SelectedTypeContext } from "../../../App";
 const CompileButton = () => {
   const { selectedType, setSelectedType }: any =
     useContext(SelectedTypeContext);
-
-  const options = [
-    {
-      value: "milifluidics",
-      label: "Milifluidics",
-    },
-    {
-      value: "hybrid",
-      label: "Hybrid",
-    },
-    {
-      value: "monolayer",
-      label: "Monolayer"
-    }
-  ];
-  const { allNodesData }: any = useContext(allNodesContext);
-  const { edges }: any = useContext(EdgesContext);
-  const { nodes }: any = useContext(NodesContext);
-  const { setOutput }: any = useOutletContext();
-  const navigate = useNavigate();
-
+    const options = [
+      {
+        value: "milifluidics",
+        label: "Milifluidics",
+      },
+      {
+        value: "hybrid",
+        label: "Hybrid",
+      },
+      {
+        value: "monolayer",
+        label: "Monolayer"
+      }
+    ];
+    const { allNodesData }: any = useContext(allNodesContext);
+    const { edges }: any = useContext(EdgesContext);
+    const { nodes }: any = useContext(NodesContext);
+    const { setOutput }: any = useOutletContext();
+    const navigate = useNavigate();
+    
+    console.log(allNodesData);
   const handleCompile = () => {
     switch (selectedType) {
 
@@ -49,7 +49,7 @@ const CompileButton = () => {
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log("Design result from backend:", data);
+            console.log("Design result from mili backend:", data);
             setOutput(data);
 
             // TODO: you can store or visualize it here
@@ -72,8 +72,8 @@ const CompileButton = () => {
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log("Design result from backend:", data);
-            // setOutput(data);
+            console.log("Design result from hybrid backend:", data);
+            setOutput(data);
 
             // TODO: you can store or visualize it here
           })
@@ -81,7 +81,7 @@ const CompileButton = () => {
             console.error("Error sending data to backend bigdick:", error);
           });
         
-        // navigate("/output");
+        navigate("/output");
         break;
 
         
@@ -185,18 +185,27 @@ const CompileButton = () => {
   };
 
   return (
-    <div>
-      <Select defaultValue={options[0]} onChange={option => setSelectedType(option.value)} options={options} />
+    <div
+      style={{
+        width: "90%",
+      }}
+    >
+      <Select
+        defaultValue={options[0]}
+        onChange={(option) => setSelectedType(option.value)}
+        options={options}
+        style={{fontSize: ".85rem"}}
+      />
       <Button
         variant="contained"
         color="secondary"
         onClick={handleCompile}
         disabled={edges.length === 0}
         style={{
-          width: "90%",
+          width: "100%",
           borderRadius: 30,
           fontSize: ".85rem",
-          marginBottom: "10px",
+          margin: "13px 0",
         }}
       >
         Compile

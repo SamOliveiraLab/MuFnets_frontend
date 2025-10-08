@@ -23,8 +23,8 @@ const iconMap: Record<string, string> = {
   Output: "/output_image.png",
 };
 
-const CELL_WIDTH = 200;
-const CELL_HEIGHT = 80;
+const CELL_WIDTH = 150;
+const CELL_HEIGHT = 100;
 const PADDING_LEFT = 100;
 const PADDING_TOP = 100;
 
@@ -69,7 +69,7 @@ const D3GraphWithImages: React.FC = () => {
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove(); // Clear
 
-    const width = 1800;
+    const width = window.innerWidth;
     const height = 1200;
     svg.attr("width", width).attr("height", height);
 
@@ -82,7 +82,7 @@ const D3GraphWithImages: React.FC = () => {
       .append("marker")
       .attr("id", "arrow")
       .attr("viewBox", "0 -5 10 10")
-      .attr("refX", 20)
+      .attr("refX", 25)
       .attr("refY", 0)
       .attr("markerWidth", 6)
       .attr("markerHeight", 6)
@@ -123,7 +123,7 @@ const D3GraphWithImages: React.FC = () => {
       .attr("stroke", "#aaa")
       .attr("stroke-width", 1.5)
       .attr("fill", "none")
-      .attr("opacity", 0.7)
+      .attr("opacity", 0.8)
       .attr("marker-end", "url(#arrow)");
 
     // Draw node groups
